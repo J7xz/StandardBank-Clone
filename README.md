@@ -208,12 +208,7 @@ Google Fonts for typography
 
 ASP.NET Identity for authentication
 
-📧 Contact
-Developer: Anele Buthelezi
 
-Email: anele@example.com
-
-GitHub: github.com/yourusername
 
 Made with ❤️ and C#
 
