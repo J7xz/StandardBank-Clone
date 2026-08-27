@@ -1,0 +1,400 @@
+﻿@model StandardBank.ViewModels.TransactionHistoryViewModel
+
+@{
+    ViewBag.Title = "Transaction History";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .filter-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 18px 22px;
+        margin-bottom: 24px;
+    }
+
+        .filter-card .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .filter-card .form-group {
+            flex: 1;
+            min-width: 140px;
+        }
+
+            .filter-card .form-group label {
+                font-size: 12px;
+                font-weight: 600;
+                color: #0a1628;
+                display: block;
+                margin-bottom: 3px;
+            }
+
+            .filter-card .form-group .form-control,
+            .filter-card .form-group .form-select {
+                width: 100%;
+                padding: 8px 12px;
+                border: 1px solid #eaedf2;
+                border-radius: 8px;
+                font-size: 13px;
+                font-family: 'Inter', sans-serif;
+                background: #fff;
+                color: #0a1628;
+                transition: 0.2s;
+            }
+
+                .filter-card .form-group .form-control:focus,
+                .filter-card .form-group .form-select:focus {
+                    border-color: #003399;
+                    outline: none;
+                    box-shadow: 0 0 0 3px rgba(0,51,153,0.06);
+                }
+
+        .filter-card .btn-filter {
+            padding: 8px 24px;
+            background: #003399;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            min-width: 80px;
+        }
+
+            .filter-card .btn-filter:hover {
+                background: #002266;
+            }
+
+        .filter-card .btn-reset {
+            padding: 8px 16px;
+            background: #f0f2f7;
+            color: #0a1628;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+            .filter-card .btn-reset:hover {
+                background: #e5e8ef;
+            }
+
+    .table-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        overflow: hidden;
+    }
+
+        .table-card .head {
+            padding: 14px 20px;
+            border-bottom: 1px solid #eaedf2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fafbfc;
+        }
+
+            .table-card .head .title {
+                font-size: 14px;
+                font-weight: 600;
+                color: #0a1628;
+            }
+
+                .table-card .head .title i {
+                    color: #003399;
+                    margin-right: 8px;
+                }
+
+        .table-card .body {
+            padding: 0;
+            overflow-x: auto;
+        }
+
+        .table-card table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+            .table-card table th {
+                background: #f8fafc;
+                color: #6b7a8f;
+                font-weight: 600;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                padding: 12px 16px;
+                text-align: left;
+                border-bottom: 1px solid #eaedf2;
+            }
+
+            .table-card table td {
+                padding: 11px 16px;
+                border-bottom: 1px solid #f5f7fa;
+                vertical-align: middle;
+            }
+
+            .table-card table tr:last-child td {
+                border-bottom: none;
+            }
+
+            .table-card table tr:hover td {
+                background: #fafbfc;
+            }
+
+    .badge-status {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 12px;
+        border-radius: 20px;
+    }
+
+        .badge-status.completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-status.failed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+    .badge-type {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 12px;
+        border-radius: 20px;
+    }
+
+        .badge-type.credit {
+            background: #ecfdf5;
+            color: #16a34a;
+        }
+
+        .badge-type.debit {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+    .empty-state {
+        padding: 48px 20px;
+        text-align: center;
+        color: #6b7a8f;
+    }
+
+        .empty-state i {
+            font-size: 36px;
+            opacity: 0.15;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .empty-state .main {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .empty-state .sub {
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+    @@media (max-width: 768px) {
+        .filter-card .form-group {
+            min-width: 100%;
+        }
+
+        .table-card table {
+            font-size: 12px;
+        }
+
+            .table-card table th,
+            .table-card table td {
+                padding: 8px 10px;
+            }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Transaction History</h1>
+        <p>View and filter all your transactions</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-card">
+        @using (Html.BeginForm("History", "Banking", FormMethod.Get))
+        {
+            <div class="row">
+                <div class="form-group">
+                    <label>Account</label>
+                    <select name="accountId" class="form-select">
+                        <option value="">All Accounts</option>
+                        @foreach (var acc in Model.Accounts)
+                        {
+                            <option value="@acc.Id" @(Model.AccountId == acc.Id ? "selected" : "")>
+                                @acc.AccountNumber - @acc.AccountType
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Type</label>
+                    <select name="filterType" class="form-select">
+                        <option value="All" @(Model.FilterType == "All" ? "selected" : "")>All</option>
+                        <option value="Credit" @(Model.FilterType == "Credit" ? "selected" : "")>Income</option>
+                        <option value="Debit" @(Model.FilterType == "Debit" ? "selected" : "")>Expense</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>From Date</label>
+                    <input type="date" name="fromDate" class="form-control" value="@(Model.FromDate?.ToString("yyyy-MM-dd"))" />
+                </div>
+
+                <div class="form-group">
+                    <label>To Date</label>
+                    <input type="date" name="toDate" class="form-control" value="@(Model.ToDate?.ToString("yyyy-MM-dd"))" />
+                </div>
+
+                <div class="form-group" style="flex: 1.5;">
+                    <label>Search</label>
+                    <input type="text" name="searchTerm" class="form-control" placeholder="Description or reference..." value="@Model.SearchTerm" />
+                </div>
+
+                <div class="form-group" style="flex: 0 0 auto;">
+                    <button type="submit" class="btn-filter">Filter</button>
+                    <a href="@Url.Action("History", "Banking")" class="btn-reset">Reset</a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Stats -->
+    <div style="display:flex; gap:24px; margin-bottom:18px; flex-wrap:wrap;">
+        <div>
+            <span style="font-size:12px; color:#6b7a8f;">Total Transactions</span>
+            <span style="font-weight:700; font-size:18px; color:#0a1628; display:block;">@Model.TotalTransactions</span>
+        </div>
+        <div>
+            <span style="font-size:12px; color:#6b7a8f;">Total Income</span>
+            <span style="font-weight:700; font-size:18px; color:#16a34a; display:block;">@Model.TotalCredit.ToString("C")</span>
+        </div>
+        <div>
+            <span style="font-size:12px; color:#6b7a8f;">Total Expenses</span>
+            <span style="font-weight:700; font-size:18px; color:#dc2626; display:block;">@Model.TotalDebit.ToString("C")</span>
+        </div>
+        <div>
+            <span style="font-size:12px; color:#6b7a8f;">Net</span>
+            <span style="font-weight:700; font-size:18px; color:@(Model.TotalCredit - Model.TotalDebit >= 0 ? "#16a34a" : "#dc2626"); display:block;">
+                @((Model.TotalCredit - Model.TotalDebit).ToString("C"))
+            </span>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+        <div class="head">
+            <span class="title"><i class="fas fa-list"></i>Transactions</span>
+        </div>
+        <div class="body">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Account</th>
+                        <th>Description</th>
+                        <th>Reference</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Transactions != null && Model.Transactions.Count > 0)
+                    {
+                        foreach (var t in Model.Transactions)
+                        {
+                            <tr>
+                                <td><small>@t.TransactionDate.ToString("dd MMM yyyy HH:mm")</small></td>
+                                <td>
+                                    @if (t.Account != null)
+                                    {
+                                        <small>@t.Account.AccountNumber</small>
+                                    }
+                                    else
+                                    {
+                                        <small class="text-muted">N/A</small>
+                                    }
+                                </td>
+                                <td>@t.Description</td>
+                                <td><small class="text-muted">@t.ReferenceNumber</small></td>
+                                <td class="fw-bold @(t.TransactionType == "Credit" ? "text-success" : "text-danger")">
+                                    @(t.TransactionType == "Credit" ? "+" : "-")@t.Amount.ToString("C")
+                                </td>
+                                <td>
+                                    <span class="badge-type @(t.TransactionType == "Credit" ? "credit" : "debit")">
+                                        @t.TransactionType
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge-status @(t.Status?.ToLower() == "completed" ? "completed" : t.Status?.ToLower() == "pending" ? "pending" : "failed")">
+                                        @t.Status
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <i class="fas fa-receipt"></i>
+                                    <div class="main">No transactions found</div>
+                                    <div class="sub">Try adjusting your filters</div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,401 @@
+﻿@model StandardBank.ViewModels.BillPaymentViewModel
+
+@{
+    ViewBag.Title = "Pay Bill";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .pay-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 28px 32px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+        .pay-card .form-group {
+            margin-bottom: 18px;
+        }
+
+            .pay-card .form-group label {
+                font-size: 13px;
+                font-weight: 600;
+                color: #0a1628;
+                display: block;
+                margin-bottom: 4px;
+            }
+
+            .pay-card .form-group .form-control,
+            .pay-card .form-group .form-select {
+                width: 100%;
+                padding: 10px 14px;
+                border: 1px solid #eaedf2;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: 'Inter', sans-serif;
+                transition: 0.2s;
+                background: #fff;
+                color: #0a1628;
+                appearance: auto;
+            }
+
+                .pay-card .form-group .form-control:focus,
+                .pay-card .form-group .form-select:focus {
+                    border-color: #003399;
+                    outline: none;
+                    box-shadow: 0 0 0 3px rgba(0,51,153,0.06);
+                }
+
+                .pay-card .form-group .form-control::placeholder {
+                    color: #9aa3b3;
+                }
+
+            .pay-card .form-group .hint {
+                font-size: 12px;
+                color: #6b7a8f;
+                margin-top: 4px;
+            }
+
+        .pay-card .amount-input {
+            position: relative;
+        }
+
+            .pay-card .amount-input .currency {
+                position: absolute;
+                left: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-weight: 600;
+                color: #6b7a8f;
+                font-size: 15px;
+            }
+
+            .pay-card .amount-input input {
+                padding-left: 32px;
+            }
+
+        .pay-card .quick-amounts {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+            .pay-card .quick-amounts button {
+                padding: 4px 16px;
+                border: 1px solid #eaedf2;
+                border-radius: 6px;
+                background: #fff;
+                font-size: 13px;
+                font-weight: 500;
+                color: #0a1628;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+                .pay-card .quick-amounts button:hover {
+                    border-color: #003399;
+                    background: #f5f7fa;
+                }
+
+        .pay-card .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #003399;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 4px;
+        }
+
+            .pay-card .submit-btn:hover {
+                background: #002266;
+            }
+
+            .pay-card .submit-btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+    .bill-type-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+        .bill-type-grid .bill-option {
+            padding: 10px 8px;
+            text-align: center;
+            border: 1px solid #eaedf2;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #fff;
+        }
+
+            .bill-type-grid .bill-option:hover {
+                border-color: #003399;
+            }
+
+            .bill-type-grid .bill-option.selected {
+                border-color: #003399;
+                background: #e8f0fe;
+            }
+
+            .bill-type-grid .bill-option i {
+                font-size: 20px;
+                display: block;
+                margin-bottom: 4px;
+                color: #6b7a8f;
+            }
+
+            .bill-type-grid .bill-option.selected i {
+                color: #003399;
+            }
+
+            .bill-type-grid .bill-option span {
+                font-size: 12px;
+                font-weight: 500;
+                color: #0a1628;
+            }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
+
+    .alert-danger {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+
+    .alert-info {
+        background: #e8f0fe;
+        color: #003399;
+        border: 1px solid #c5d5f0;
+    }
+
+    .text-danger {
+        color: #dc2626;
+        font-size: 13px;
+        margin-top: 4px;
+        display: block;
+    }
+
+    @@media (max-width: 600px) {
+        .pay-card {
+            padding: 20px;
+        }
+
+            .pay-card .quick-amounts button {
+                flex: 1;
+                min-width: 60px;
+                text-align: center;
+            }
+
+        .bill-type-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Pay Bill</h1>
+        <p>Pay your utility bills instantly and securely</p>
+    </div>
+
+    <!-- Pay Bill Form -->
+    <div class="pay-card">
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            </div>
+        }
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            </div>
+        }
+
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            Select a bill type, choose your account, and enter the amount to pay.
+        </div>
+
+        @using (Html.BeginForm("PayBill", "BillPayment", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <!-- Bill Type - Grid -->
+            <div class="form-group">
+                <label>Bill Type</label>
+                <div class="bill-type-grid" id="billTypeGrid">
+                    <div class="bill-option" data-value="Electricity" onclick="selectBillType('Electricity')">
+                        <i class="fas fa-bolt"></i>
+                        <span>Electricity</span>
+                    </div>
+                    <div class="bill-option" data-value="Water" onclick="selectBillType('Water')">
+                        <i class="fas fa-tint"></i>
+                        <span>Water</span>
+                    </div>
+                    <div class="bill-option" data-value="DSTV" onclick="selectBillType('DSTV')">
+                        <i class="fas fa-tv"></i>
+                        <span>DSTV</span>
+                    </div>
+                    <div class="bill-option" data-value="Internet" onclick="selectBillType('Internet')">
+                        <i class="fas fa-wifi"></i>
+                        <span>Internet</span>
+                    </div>
+                    <div class="bill-option" data-value="Municipality" onclick="selectBillType('Municipality')">
+                        <i class="fas fa-city"></i>
+                        <span>Municipality</span>
+                    </div>
+                    <div class="bill-option" data-value="Education" onclick="selectBillType('Education')">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Education</span>
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.BillType, new { id = "BillTypeHidden" })
+                @Html.ValidationMessageFor(m => m.BillType, "", new { @class = "text-danger" })
+                <div class="hint" id="billTypeHint">Select a bill type above</div>
+            </div>
+
+            <!-- Account -->
+            <div class="form-group">
+                @Html.LabelFor(m => m.AccountId, "Pay From Account")
+                @Html.DropDownListFor(m => m.AccountId,
+                    new SelectList(Model.Accounts, "Id", "AccountNumber"),
+                    "-- Select Account --",
+                    new { @class = "form-select" })
+                @Html.ValidationMessageFor(m => m.AccountId, "", new { @class = "text-danger" })
+            </div>
+
+            <!-- Amount -->
+            <div class="form-group">
+                @Html.LabelFor(m => m.Amount, "Amount")
+                <div class="amount-input">
+                    <span class="currency">R</span>
+                    @Html.TextBoxFor(m => m.Amount, new { @class = "form-control", placeholder = "0.00", type = "number", step = "0.01", min = "0.01" })
+                </div>
+                @Html.ValidationMessageFor(m => m.Amount, "", new { @class = "text-danger" })
+                <div class="quick-amounts">
+                    <button type="button" onclick="setAmount(100)">R100</button>
+                    <button type="button" onclick="setAmount(200)">R200</button>
+                    <button type="button" onclick="setAmount(500)">R500</button>
+                    <button type="button" onclick="setAmount(1000)">R1,000</button>
+                    <button type="button" onclick="setAmount(2000)">R2,000</button>
+                </div>
+            </div>
+
+            <!-- Reference Number -->
+            <div class="form-group">
+                @Html.LabelFor(m => m.ReferenceNumber, "Reference Number")
+                @Html.TextBoxFor(m => m.ReferenceNumber, new { @class = "form-control", placeholder = "Enter your account/reference number" })
+                @Html.ValidationMessageFor(m => m.ReferenceNumber, "", new { @class = "text-danger" })
+                <div class="hint" id="referenceHint">Enter your account number for this biller</div>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                @Html.LabelFor(m => m.Description, "Description")
+                @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = "2", placeholder = "Description (optional)" })
+                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-check-circle me-2"></i>Pay Now
+            </button>
+        }
+
+    </div>
+
+</div>
+
+<script>
+    // ===== BILL TYPE SELECTION =====
+    var billTypeOptions = document.querySelectorAll('.bill-option');
+    var billTypeHidden = document.getElementById('BillTypeHidden');
+    var billTypeHint = document.getElementById('billTypeHint');
+
+    var billTypeMessages = {
+        'Electricity': 'Pay your Eskom electricity bill',
+        'Water': 'Pay your municipal water bill',
+        'DSTV': 'Pay your DSTV subscription',
+        'Internet': 'Pay your internet service provider',
+        'Municipality': 'Pay your municipal services',
+        'Education': 'Pay your education fees'
+    };
+
+    var referenceMessages = {
+        'Electricity': 'Enter your Eskom account number',
+        'Water': 'Enter your municipal account number',
+        'DSTV': 'Enter your DSTV smartcard number',
+        'Internet': 'Enter your internet account number',
+        'Municipality': 'Enter your municipal reference number',
+        'Education': 'Enter your student number'
+    };
+
+    function selectBillType(value) {
+        // Update hidden field
+        billTypeHidden.value = value;
+
+        // Update UI
+        billTypeOptions.forEach(function (el) {
+            el.classList.toggle('selected', el.dataset.value === value);
+        });
+
+        // Update hint
+        billTypeHint.textContent = billTypeMessages[value] || 'Select a bill type above';
+
+        // Update reference hint
+        var referenceHint = document.getElementById('referenceHint');
+        referenceHint.textContent = referenceMessages[value] || 'Enter your account/reference number';
+    }
+
+    // ===== SET AMOUNT =====
+    function setAmount(amount) {
+        document.getElementById('Amount').value = amount;
+    }
+</script>

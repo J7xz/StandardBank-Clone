@@ -1,0 +1,362 @@
+﻿@model IEnumerable<StandardBank.Models.Beneficiary>
+
+@{
+    ViewBag.Title = "Beneficiaries";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .beneficiary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 18px;
+    }
+
+    .beneficiary-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 20px 22px;
+        transition: 0.2s;
+    }
+
+        .beneficiary-card:hover {
+            border-color: #003399;
+            box-shadow: 0 4px 20px rgba(0,51,153,0.06);
+            transform: translateY(-2px);
+        }
+
+        .beneficiary-card .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+            .beneficiary-card .top .left {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .beneficiary-card .top .avatar {
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                background: #e8f0fe;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                font-weight: 700;
+                color: #003399;
+                flex-shrink: 0;
+            }
+
+            .beneficiary-card .top .name {
+                font-size: 15px;
+                font-weight: 600;
+                color: #0a1628;
+            }
+
+            .beneficiary-card .top .nickname {
+                font-size: 11px;
+                font-weight: 500;
+                color: #6b7a8f;
+                display: block;
+            }
+
+            .beneficiary-card .top .status {
+                font-size: 10px;
+                font-weight: 600;
+                padding: 2px 12px;
+                border-radius: 20px;
+                background: #dcfce7;
+                color: #166534;
+            }
+
+        .beneficiary-card .details {
+            margin-bottom: 14px;
+        }
+
+            .beneficiary-card .details .row {
+                display: flex;
+                justify-content: space-between;
+                padding: 4px 0;
+                font-size: 13px;
+                border-bottom: 1px solid #f8fafc;
+            }
+
+                .beneficiary-card .details .row:last-child {
+                    border-bottom: none;
+                }
+
+                .beneficiary-card .details .row .label {
+                    color: #6b7a8f;
+                }
+
+                .beneficiary-card .details .row .value {
+                    font-weight: 500;
+                    color: #0a1628;
+                }
+
+        .beneficiary-card .actions {
+            display: flex;
+            gap: 8px;
+            padding-top: 14px;
+            border-top: 1px solid #f5f7fa;
+        }
+
+            .beneficiary-card .actions a {
+                padding: 6px 14px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 500;
+                text-decoration: none;
+                transition: 0.2s;
+                text-align: center;
+            }
+
+            .beneficiary-card .actions .send-btn {
+                background: #003399;
+                color: #fff;
+                flex: 1;
+            }
+
+                .beneficiary-card .actions .send-btn:hover {
+                    background: #002266;
+                }
+
+            .beneficiary-card .actions .edit-btn {
+                background: #f0f2f7;
+                color: #0a1628;
+                padding: 6px 12px;
+            }
+
+                .beneficiary-card .actions .edit-btn:hover {
+                    background: #e5e8ef;
+                }
+
+            .beneficiary-card .actions .delete-btn {
+                background: #fef2f2;
+                color: #dc2626;
+                padding: 6px 12px;
+            }
+
+                .beneficiary-card .actions .delete-btn:hover {
+                    background: #fee2e2;
+                }
+
+    .btn-add {
+        padding: 10px 24px;
+        background: #003399;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-add:hover {
+            background: #002266;
+            color: #fff;
+        }
+
+    .empty-state {
+        grid-column: 1 / -1;
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 60px 20px;
+        text-align: center;
+        color: #6b7a8f;
+    }
+
+        .empty-state i {
+            font-size: 40px;
+            opacity: 0.15;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .empty-state .main {
+            font-size: 16px;
+            font-weight: 500;
+            color: #0a1628;
+        }
+
+        .empty-state .sub {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .empty-state a {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 28px;
+            background: #003399;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .empty-state a:hover {
+                background: #002266;
+            }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+
+    .alert-danger {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+
+    @@media (max-width: 600px) {
+        .beneficiary-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .beneficiary-card .actions {
+            flex-wrap: wrap;
+        }
+
+            .beneficiary-card .actions .send-btn {
+                flex: 1 1 100%;
+            }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1>Beneficiaries</h1>
+            <p>Manage your saved recipients for quick transfers</p>
+        </div>
+        <a href="@Url.Action("Create", "Beneficiary")" class="btn-add">
+            <i class="fas fa-user-plus me-2"></i>Add Beneficiary
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+        </div>
+    }
+
+    <!-- Beneficiaries Grid -->
+    <div class="beneficiary-grid">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var beneficiary in Model)
+            {
+                <div class="beneficiary-card">
+                    <div class="top">
+                        <div class="left">
+                            <div class="avatar">@beneficiary.Name.Substring(0, 1).ToUpper()</div>
+                            <div>
+                                <div class="name">@beneficiary.Name</div>
+                                @if (!string.IsNullOrEmpty(beneficiary.Nickname))
+                                {
+                                    <span class="nickname">@beneficiary.Nickname</span>
+                                }
+                            </div>
+                        </div>
+                        <span class="status">Active</span>
+                    </div>
+
+                    <div class="details">
+                        <div class="row">
+                            <span class="label">Account Number</span>
+                            <span class="value">@beneficiary.AccountNumber</span>
+                        </div>
+                        <div class="row">
+                            <span class="label">Bank</span>
+                            <span class="value">@beneficiary.BankName</span>
+                        </div>
+                        <div class="row">
+                            <span class="label">Added</span>
+                            <span class="value">@beneficiary.DateAdded.ToString("dd MMM yyyy")</span>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <a href="@Url.Action("Transfer", "Banking", new { beneficiaryId = beneficiary.Id })" class="send-btn">
+                            <i class="fas fa-paper-plane me-1"></i>Send Money
+                        </a>
+                        <a href="@Url.Action("Edit", "Beneficiary", new { id = beneficiary.Id })" class="edit-btn" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="@Url.Action("Delete", "Beneficiary", new { id = beneficiary.Id })" class="delete-btn" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-users"></i>
+                <div class="main">No beneficiaries found</div>
+                <div class="sub">Add your first beneficiary to get started</div>
+                <a href="@Url.Action("Create", "Beneficiary")">Add Your First Beneficiary</a>
+            </div>
+        }
+    </div>
+
+</div>

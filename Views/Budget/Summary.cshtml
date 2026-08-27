@@ -1,0 +1,268 @@
+﻿@{
+    ViewBag.Title = "Budget Summary";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var monthlyData = ViewBag.MonthlyData as List<StandardBank.Controllers.MonthlyBudgetSummary>;
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .table-wrap {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        overflow: hidden;
+    }
+
+        .table-wrap table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+            .table-wrap table th {
+                background: #f8fafc;
+                color: #6b7a8f;
+                font-weight: 600;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                padding: 12px 16px;
+                text-align: left;
+                border-bottom: 1px solid #eaedf2;
+            }
+
+            .table-wrap table td {
+                padding: 10px 16px;
+                border-bottom: 1px solid #f5f7fa;
+            }
+
+            .table-wrap table tr:last-child td {
+                border-bottom: none;
+            }
+
+            .table-wrap table tr:hover td {
+                background: #fafbfc;
+            }
+
+    .badge-count {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 10px;
+        border-radius: 20px;
+        background: #e8f0fe;
+        color: #003399;
+    }
+
+    .status-text {
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+        .status-text.over {
+            color: #dc2626;
+        }
+
+        .status-text.near {
+            color: #eab308;
+        }
+
+        .status-text.ontrack {
+            color: #16a34a;
+        }
+
+        .status-text.none {
+            color: #6b7a8f;
+        }
+
+    .btn-secondary {
+        padding: 8px 18px;
+        background: #f0f2f7;
+        color: #0a1628;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-secondary:hover {
+            background: #e5e8ef;
+        }
+
+    .btn-year {
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-size: 13px;
+        text-decoration: none;
+        transition: 0.2s;
+        color: #6b7a8f;
+        border: 1px solid #eaedf2;
+        background: #fff;
+    }
+
+        .btn-year:hover {
+            border-color: #003399;
+            color: #003399;
+        }
+
+    .empty-state {
+        padding: 40px 20px;
+        text-align: center;
+        color: #6b7a8f;
+    }
+
+        .empty-state .main {
+            font-size: 15px;
+            font-weight: 500;
+            color: #0a1628;
+        }
+
+        .empty-state .sub {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+    @@media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .table-wrap table {
+            font-size: 12px;
+        }
+
+            .table-wrap table th,
+            .table-wrap table td {
+                padding: 8px 10px;
+            }
+    }
+
+    @@media (max-width: 480px) {
+        .table-wrap table {
+            font-size: 11px;
+        }
+
+        .page-header .year-nav {
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1>Yearly Summary</h1>
+            <p>Budget performance for @ViewBag.Year</p>
+        </div>
+        <div class="year-nav" style="display:flex; gap:8px;">
+            <a href="@Url.Action("Summary", "Budget", new { year = ViewBag.Year - 1 })" class="btn-year">
+                <i class="fas fa-chevron-left me-2"></i>@(ViewBag.Year - 1)
+            </a>
+            <a href="@Url.Action("Summary", "Budget", new { year = ViewBag.Year + 1 })" class="btn-year">
+                @(ViewBag.Year + 1)<i class="fas fa-chevron-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Categories</th>
+                    <th>Allocated</th>
+                    <th>Spent</th>
+                    <th>Remaining</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (monthlyData != null && monthlyData.Any())
+                {
+                    foreach (var data in monthlyData)
+                    {
+                        var monthName = new DateTime(ViewBag.Year, data.Month, 1).ToString("MMMM");
+                        var remaining = data.TotalAllocated - data.TotalSpent;
+                        var statusClass = remaining < 0 ? "over" : remaining < (data.TotalAllocated * 0.2m) ? "near" : data.TotalAllocated > 0 ? "ontrack" : "none";
+                        var statusText = remaining < 0 ? "Over Budget" : remaining < (data.TotalAllocated * 0.2m) ? "Near Limit" : data.TotalAllocated > 0 ? "On Track" : "No Budget";
+
+                        <tr>
+                            <td style="font-weight:600; color:#0a1628;">@monthName</td>
+                            <td><span class="badge-count">@data.BudgetCount</span></td>
+                            <td>@data.TotalAllocated.ToString("C")</td>
+                            <td style="color:#dc2626;">@data.TotalSpent.ToString("C")</td>
+                            <td style="color:@(remaining < 0 ? "#dc2626" : remaining < (data.TotalAllocated * 0.2m) ? "#eab308" : "#16a34a");">
+                                @remaining.ToString("C")
+                            </td>
+                            <td>
+                                <span class="status-text @statusClass">
+                                    @if (remaining < 0)
+                                    {
+                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                    }
+                                    else if (remaining < (data.TotalAllocated * 0.2m))
+                                    {
+                                        <i class="fas fa-clock me-1"></i>
+                                    }
+                                    else if (data.TotalAllocated > 0)
+                                    {
+                                        <i class="fas fa-check-circle me-1"></i>
+                                    }
+                                    @statusText
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <div class="main">No budget data for @ViewBag.Year</div>
+                                <div class="sub">Create budgets to start tracking your yearly spending</div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top:16px;">
+        <a href="@Url.Action("Index", "Budget")" class="btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Budget
+        </a>
+    </div>
+
+</div>

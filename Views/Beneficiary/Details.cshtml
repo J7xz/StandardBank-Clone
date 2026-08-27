@@ -1,0 +1,229 @@
+﻿@model StandardBank.Models.Beneficiary
+
+@{
+    ViewBag.Title = "Beneficiary Details";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .details-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 28px 32px;
+        max-width: 520px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .avatar-large {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #e8f0fe;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        font-weight: 700;
+        color: #003399;
+        margin: 0 auto 12px;
+    }
+
+    .details-card .name {
+        font-size: 20px;
+        font-weight: 700;
+        color: #0a1628;
+    }
+
+    .details-card .nickname {
+        font-size: 13px;
+        color: #6b7a8f;
+        display: block;
+    }
+
+    .details-card .divider {
+        margin: 16px 0;
+        border: none;
+        border-top: 1px solid #eaedf2;
+    }
+
+    .details-card .info-grid {
+        text-align: left;
+    }
+
+        .details-card .info-grid .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f8fafc;
+            font-size: 14px;
+        }
+
+            .details-card .info-grid .row:last-child {
+                border-bottom: none;
+            }
+
+            .details-card .info-grid .row .label {
+                color: #6b7a8f;
+            }
+
+            .details-card .info-grid .row .value {
+                font-weight: 500;
+                color: #0a1628;
+            }
+
+    .details-card .status-badge {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 16px;
+        border-radius: 20px;
+        background: #dcfce7;
+        color: #166534;
+        display: inline-block;
+        margin-top: 4px;
+    }
+
+    .details-card .actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #eaedf2;
+    }
+
+        .details-card .actions a {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: 0.2s;
+            text-align: center;
+            flex: 1;
+        }
+
+        .details-card .actions .send-btn {
+            background: #003399;
+            color: #fff;
+        }
+
+            .details-card .actions .send-btn:hover {
+                background: #002266;
+            }
+
+        .details-card .actions .edit-btn {
+            background: #f0f2f7;
+            color: #0a1628;
+            flex: 0 0 auto;
+            padding: 10px 16px;
+        }
+
+            .details-card .actions .edit-btn:hover {
+                background: #e5e8ef;
+            }
+
+        .details-card .actions .back-btn {
+            background: transparent;
+            color: #6b7a8f;
+            flex: 0 0 auto;
+            padding: 10px 16px;
+            border: 1px solid #eaedf2;
+        }
+
+            .details-card .actions .back-btn:hover {
+                background: #f8fafc;
+            }
+
+    @@media (max-width: 600px) {
+        .details-card {
+            padding: 20px;
+        }
+
+            .details-card .actions {
+                flex-wrap: wrap;
+            }
+
+                .details-card .actions a {
+                    flex: 1 1 100%;
+                }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Beneficiary Details</h1>
+        <p>View beneficiary information</p>
+    </div>
+
+    <!-- Details -->
+    <div class="details-card">
+
+        <div class="avatar-large">@Model.Name.Substring(0, 1).ToUpper()</div>
+        <div class="name">@Model.Name</div>
+        @if (!string.IsNullOrEmpty(Model.Nickname))
+        {
+            <span class="nickname">@Model.Nickname</span>
+        }
+        <span class="status-badge">Active</span>
+
+        <hr class="divider" />
+
+        <div class="info-grid">
+            <div class="row">
+                <span class="label">Full Name</span>
+                <span class="value">@Model.Name</span>
+            </div>
+            <div class="row">
+                <span class="label">Nickname</span>
+                <span class="value">@(string.IsNullOrEmpty(Model.Nickname) ? "N/A" : Model.Nickname)</span>
+            </div>
+            <div class="row">
+                <span class="label">Account Number</span>
+                <span class="value">@Model.AccountNumber</span>
+            </div>
+            <div class="row">
+                <span class="label">Bank</span>
+                <span class="value">@Model.BankName</span>
+            </div>
+            <div class="row">
+                <span class="label">Added On</span>
+                <span class="value">@Model.DateAdded.ToString("dd MMM yyyy HH:mm")</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="@Url.Action("Transfer", "Banking", new { beneficiaryId = Model.Id })" class="send-btn">
+                <i class="fas fa-paper-plane me-2"></i>Send Money
+            </a>
+            <a href="@Url.Action("Edit", "Beneficiary", new { id = Model.Id })" class="edit-btn" title="Edit">
+                <i class="fas fa-edit"></i>
+            </a>
+            <a href="@Url.Action("Index", "Beneficiary")" class="back-btn" title="Back">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+
+    </div>
+
+</div>

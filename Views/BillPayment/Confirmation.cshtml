@@ -1,0 +1,69 @@
+﻿@model StandardBank.ViewModels.BillPaymentConfirmationViewModel
+
+@{
+    ViewBag.Title = "Payment Confirmation";
+    ViewBag.SubTitle = "Bill payment successful";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center animate-fade-in">
+    <div class="col-lg-6">
+        <div class="card card-elegant text-center p-4">
+            <div class="card-body">
+                <div class="success-icon mb-4">
+                    <div class="rounded-circle bg-success bg-opacity-10 p-4 d-inline-block">
+                        <i class="fas fa-check-circle text-success" style="font-size: 48px;"></i>
+                    </div>
+                </div>
+                <h4 class="fw-bold mb-2">Payment Complete!</h4>
+                <p class="text-muted">Your bill has been paid successfully.</p>
+
+                <hr />
+
+                <div class="text-start">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <small class="text-muted">Bill Type</small>
+                            <p class="fw-semibold mb-0">@Model.BillType</p>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Account</small>
+                            <p class="fw-semibold mb-0">@Model.AccountNumber</p>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Amount</small>
+                            <p class="fw-bold text-danger mb-0">@Model.Amount.ToString("C")</p>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Reference</small>
+                            <p class="fw-semibold mb-0">@Model.ReferenceNumber</p>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Date</small>
+                            <p class="fw-semibold mb-0">@Model.PaymentDate</p>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Status</small>
+                            <p class="fw-semibold text-success mb-0">@Model.Status</p>
+                        </div>
+                        <div class="col-12">
+                            <small class="text-muted">New Balance</small>
+                            <p class="fw-bold fs-5 mb-0 text-primary">@Model.NewBalance.ToString("C")</p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="d-flex gap-2">
+                    <a href="@Url.Action("Index", "BillPayment")" class="btn btn-outline-primary flex-grow-1">
+                        <i class="fas fa-history me-2"></i>Payment History
+                    </a>
+                    <a href="@Url.Action("PayBill", "BillPayment")" class="btn btn-primary flex-grow-1">
+                        <i class="fas fa-plus-circle me-2"></i>Pay Another Bill
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

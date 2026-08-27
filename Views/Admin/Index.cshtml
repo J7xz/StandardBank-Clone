@@ -1,0 +1,222 @@
+﻿@model StandardBank.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewBag.Title = "Admin Dashboard";
+    ViewBag.SubTitle = "System overview and metrics";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="animate-fade-in">
+    <!-- Stats Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-elegant">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-primary bg-opacity-10 text-primary rounded-3 p-3 me-3">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1 small">Total Users</h6>
+                            <h3 class="fw-bold mb-0">@Model.TotalUsers</h3>
+                            <small class="text-muted">@Model.ActiveUsers active</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-elegant">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-success bg-opacity-10 text-success rounded-3 p-3 me-3">
+                            <i class="fas fa-wallet fa-2x"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1 small">Total Balance</h6>
+                            <h3 class="fw-bold mb-0">@Model.TotalBalance.ToString("C")</h3>
+                            <small class="text-muted">@Model.TotalAccounts accounts</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-elegant">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-info bg-opacity-10 text-info rounded-3 p-3 me-3">
+                            <i class="fas fa-exchange-alt fa-2x"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1 small">Transactions</h6>
+                            <h3 class="fw-bold mb-0">@Model.TotalTransactions</h3>
+                            <small class="text-muted">Today: @Model.TodayTransactions.ToString("C")</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-elegant">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-warning bg-opacity-10 text-warning rounded-3 p-3 me-3">
+                            <i class="fas fa-user-plus fa-2x"></i>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-1 small">New Registrations</h6>
+                            <h3 class="fw-bold mb-0">@Model.TodayRegistrations</h3>
+                            <small class="text-muted">Today</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Row -->
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card card-elegant">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-clock me-2"></i>Recent Transactions</span>
+                    <a href="@Url.Action("Transactions", "Admin")" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Amount</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.RecentTransactions.Any())
+                                {
+                                    foreach (var t in Model.RecentTransactions.Take(10))
+                                    {
+                                        <tr>
+                                            <td>
+                                                <span class="fw-semibold">@t.Account?.User?.FullName</span>
+                                                <small class="d-block text-muted">@t.Account?.AccountNumber</small>
+                                            </td>
+                                            <td class="fw-bold @(t.TransactionType == "Credit" ? "text-success" : "text-danger")">
+                                                @(t.TransactionType == "Credit" ? "+" : "-")@t.Amount.ToString("C")
+                                            </td>
+                                            <td>
+                                                <span class="badge @(t.TransactionType == "Credit" ? "bg-success" : "bg-danger") bg-opacity-10 text-@(t.TransactionType == "Credit" ? "success" : "danger")">
+                                                    @t.TransactionType
+                                                </span>
+                                            </td>
+                                            <td><small>@t.TransactionDate.ToString("dd MMM HH:mm")</small></td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="4" class="text-center text-muted py-3">No recent transactions</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card card-elegant">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-user-clock me-2"></i>Recent Users</span>
+                    <a href="@Url.Action("Users", "Admin")" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Joined</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.RecentUsers.Any())
+                                {
+                                    foreach (var u in Model.RecentUsers.Take(10))
+                                    {
+                                        <tr>
+                                            <td><span class="fw-semibold">@u.FullName</span></td>
+                                            <td><small>@u.Email</small></td>
+                                            <td>
+                                                <span class="badge @(u.IsActive ? "bg-success" : "bg-danger")">
+                                                    @(u.IsActive ? "Active" : "Inactive")
+                                                </span>
+                                            </td>
+                                            <td><small>@u.DateRegistered.ToString("dd MMM yyyy")</small></td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="4" class="text-center text-muted py-3">No recent users</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Logs -->
+    <div class="row g-4 mt-2">
+        <div class="col-12">
+            <div class="card card-elegant">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-history me-2"></i>Recent Admin Activity</span>
+                    <a href="@Url.Action("Logs", "Admin")" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Details</th>
+                                    <th>IP Address</th>
+                                    <th>Timestamp</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.RecentLogs.Any())
+                                {
+                                    foreach (var log in Model.RecentLogs.Take(10))
+                                    {
+                                        <tr>
+                                            <td><span class="badge bg-secondary">@log.Action</span></td>
+                                            <td><small>@log.Details</small></td>
+                                            <td><small>@log.IPAddress</small></td>
+                                            <td><small>@log.Timestamp.ToString("dd MMM yyyy HH:mm")</small></td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="4" class="text-center text-muted py-3">No admin logs</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

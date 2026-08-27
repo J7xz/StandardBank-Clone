@@ -1,0 +1,579 @@
+﻿@model StandardBank.ViewModels.NotificationViewModel
+
+@{
+    ViewBag.Title = "Notifications";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .filter-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 16px 20px;
+        margin-bottom: 24px;
+    }
+
+        .filter-card .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .filter-card .form-group {
+            flex: 1;
+            min-width: 140px;
+        }
+
+            .filter-card .form-group label {
+                font-size: 12px;
+                font-weight: 600;
+                color: #0a1628;
+                display: block;
+                margin-bottom: 3px;
+            }
+
+            .filter-card .form-group .form-control,
+            .filter-card .form-group .form-select {
+                width: 100%;
+                padding: 8px 12px;
+                border: 1px solid #eaedf2;
+                border-radius: 8px;
+                font-size: 13px;
+                font-family: 'Inter', sans-serif;
+                background: #fff;
+                color: #0a1628;
+                transition: 0.2s;
+            }
+
+                .filter-card .form-group .form-control:focus,
+                .filter-card .form-group .form-select:focus {
+                    border-color: #003399;
+                    outline: none;
+                    box-shadow: 0 0 0 3px rgba(0,51,153,0.06);
+                }
+
+        .filter-card .btn-filter {
+            padding: 8px 20px;
+            background: #003399;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+            .filter-card .btn-filter:hover {
+                background: #002266;
+            }
+
+        .filter-card .btn-reset {
+            padding: 8px 16px;
+            background: #f0f2f7;
+            color: #0a1628;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+            .filter-card .btn-reset:hover {
+                background: #e5e8ef;
+            }
+
+    .notification-item {
+        padding: 16px 20px;
+        border-bottom: 1px solid #f5f7fa;
+        transition: 0.2s;
+        cursor: pointer;
+    }
+
+        .notification-item:hover {
+            background: #fafbfc;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item.unread {
+            background: #f8faff;
+            border-left: 3px solid #003399;
+        }
+
+        .notification-item.read {
+            opacity: 0.7;
+        }
+
+        .notification-item .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+            .notification-item .dot.unread {
+                background: #003399;
+            }
+
+            .notification-item .dot.read {
+                background: #d1d5db;
+            }
+
+        .notification-item .title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0a1628;
+            margin: 0;
+        }
+
+            .notification-item .title.read-text {
+                color: #6b7a8f;
+            }
+
+        .notification-item .message {
+            font-size: 13px;
+            color: #6b7a8f;
+            margin: 2px 0 0;
+        }
+
+        .notification-item .date {
+            font-size: 12px;
+            color: #9aa3b3;
+            flex-shrink: 0;
+        }
+
+        .notification-item .badge-new {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 1px 10px;
+            border-radius: 12px;
+            background: #003399;
+            color: #fff;
+            margin-left: 6px;
+        }
+
+        .notification-item .actions {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+            .notification-item .actions button {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                border: none;
+                background: transparent;
+                color: #6b7a8f;
+                cursor: pointer;
+                transition: 0.2s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+                .notification-item .actions button:hover {
+                    background: #f0f2f7;
+                    color: #0a1628;
+                }
+
+                .notification-item .actions button.danger:hover {
+                    background: #fef2f2;
+                    color: #dc2626;
+                }
+
+    .btn-outline {
+        padding: 8px 18px;
+        border: 1px solid #eaedf2;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        background: #fff;
+        color: #0a1628;
+        cursor: pointer;
+        transition: 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-outline:hover {
+            border-color: #003399;
+            color: #003399;
+        }
+
+        .btn-outline.primary {
+            border-color: #003399;
+            color: #003399;
+        }
+
+            .btn-outline.primary:hover {
+                background: #003399;
+                color: #fff;
+            }
+
+        .btn-outline.danger {
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+
+            .btn-outline.danger:hover {
+                background: #dc2626;
+                color: #fff;
+            }
+
+    .empty-state {
+        padding: 48px 20px;
+        text-align: center;
+        color: #6b7a8f;
+    }
+
+        .empty-state i {
+            font-size: 40px;
+            opacity: 0.15;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .empty-state .main {
+            font-size: 16px;
+            font-weight: 500;
+            color: #0a1628;
+        }
+
+        .empty-state .sub {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+
+    .pagination-wrap {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 20px;
+    }
+
+        .pagination-wrap a {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            text-decoration: none;
+            color: #6b7a8f;
+            border: 1px solid #eaedf2;
+            background: #fff;
+            transition: 0.2s;
+        }
+
+            .pagination-wrap a:hover {
+                border-color: #003399;
+                color: #003399;
+            }
+
+            .pagination-wrap a.active {
+                background: #003399;
+                color: #fff;
+                border-color: #003399;
+            }
+
+    .clickable-area {
+        flex: 1;
+        min-width: 0;
+        cursor: pointer;
+    }
+
+    @@media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .filter-card .form-group {
+            min-width: 100%;
+        }
+
+        .notification-item {
+            flex-wrap: wrap;
+        }
+
+            .notification-item .top-row {
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1>Notifications</h1>
+            <p>@Model.UnreadCount unread notification@(Model.UnreadCount != 1 ? "s" : "")</p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            @if (Model.UnreadCount > 0)
+            {
+                <button onclick="markAllAsRead()" class="btn-outline primary">
+                    <i class="fas fa-check-double me-2"></i>Mark All Read
+                </button>
+            }
+            <button onclick="deleteAllRead()" class="btn-outline danger">
+                <i class="fas fa-trash me-2"></i>Clear Read
+            </button>
+            <a href="@Url.Action("Index", "Notification")" class="btn-outline">
+                <i class="fas fa-sync me-2"></i>Refresh
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+        </div>
+    }
+
+    <!-- Filters -->
+    <div class="filter-card">
+        @using (Html.BeginForm("Filter", "Notification", FormMethod.Get))
+        {
+            <div class="row">
+                <div class="form-group">
+                    <label>Type</label>
+                    <select name="type" class="form-select">
+                        <option value="All" @(ViewBag.FilterType == "All" ? "selected" : "")>All</option>
+                        <option value="InApp" @(ViewBag.FilterType == "InApp" ? "selected" : "")>In-App</option>
+                        <option value="Email" @(ViewBag.FilterType == "Email" ? "selected" : "")>Email</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 2;">
+                    <label>Search</label>
+                    <input type="text" name="searchTerm" class="form-control" placeholder="Search notifications..." value="@ViewBag.SearchTerm" />
+                </div>
+                <div class="form-group" style="flex: 0 0 auto;">
+                    <button type="submit" class="btn-filter">
+                        <i class="fas fa-search me-2"></i>Filter
+                    </button>
+                    <a href="@Url.Action("Index", "Notification")" class="btn-reset">
+                        <i class="fas fa-undo me-2"></i>Reset
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Notification List -->
+    <div style="background:#fff; border-radius:14px; border:1px solid #eaedf2; overflow:hidden;">
+        @if (Model.Notifications != null && Model.Notifications.Any())
+        {
+            foreach (var notification in Model.Notifications)
+            {
+                var isUnread = !notification.IsRead;
+                <div class="notification-item @(isUnread ? "unread" : "read")" data-id="@notification.Id" data-read="@notification.IsRead.ToString().ToLower()">
+                    <div style="display:flex; align-items:flex-start; gap:14px;">
+                        <div class="dot @(isUnread ? "unread" : "read")"></div>
+                        <!-- Clickable area - goes to details -->
+                        <div class="clickable-area" onclick="goToDetails(@notification.Id)">
+                            <div class="top-row" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:4px;">
+                                <div>
+                                    <span class="title @(isUnread ? "" : "read-text")">@notification.Title</span>
+                                    @if (isUnread)
+                                    {
+                                        <span class="badge-new">New</span>
+                                    }
+                                </div>
+                                <span class="date">@notification.DateSent.ToString("dd MMM yyyy HH:mm")</span>
+                            </div>
+                            <div class="message">@notification.Message</div>
+                            @if (!string.IsNullOrEmpty(notification.LinkUrl))
+                            {
+                                <div style="font-size:13px; color:#003399; margin-top:4px;">
+                                    View Details <i class="fas fa-arrow-right ms-1"></i>
+                                </div>
+                            }
+                        </div>
+                        <!-- Action buttons -->
+                        <div class="actions" onclick="event.stopPropagation();">
+                            @if (isUnread)
+                            {
+                                <button onclick="markAsRead(@notification.Id)" title="Mark as read" class="mark-read-btn">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            }
+                            <button onclick="deleteNotification(@notification.Id)" title="Delete" class="danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-bell-slash"></i>
+                <div class="main">No Notifications</div>
+                <div class="sub">You're all caught up! No notifications to display.</div>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination -->
+    @if (ViewBag.TotalPages > 1)
+    {
+        <div class="pagination-wrap">
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <a href="@Url.Action("Index", "Notification", new { page = i, pageSize = ViewBag.PageSize })" class="@(i == ViewBag.CurrentPage ? "active" : "")">@i</a>
+            }
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+    <script>
+        // Go to notification details
+        function goToDetails(id) {
+            window.location.href = '@Url.Action("Details", "Notification")/' + id;
+        }
+
+        // Mark single notification as read
+        function markAsRead(id) {
+            event.stopPropagation();
+            $.ajax({
+                url: '@Url.Action("MarkAsRead", "Notification")',
+                type: 'POST',
+                data: { id: id },
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert('Failed to mark notification as read.');
+                    }
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        }
+
+        // Mark all as read
+        function markAllAsRead() {
+            if (!confirm('Mark all notifications as read?')) return;
+
+            $.ajax({
+                url: '@Url.Action("MarkAllAsRead", "Notification")',
+                type: 'POST',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert('Failed to mark all as read.');
+                    }
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        }
+
+        // Delete single notification
+        function deleteNotification(id) {
+            event.stopPropagation();
+            if (!confirm('Delete this notification?')) return;
+
+            $.ajax({
+                url: '@Url.Action("Delete", "Notification")',
+                type: 'POST',
+                data: { id: id },
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert('Failed to delete notification.');
+                    }
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        }
+
+        // Delete all read notifications
+        function deleteAllRead() {
+            if (!confirm('Delete all read notifications?')) return;
+
+            $.ajax({
+                url: '@Url.Action("DeleteAll", "Notification")',
+                type: 'POST',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert('Failed to delete read notifications.');
+                    }
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        }
+    </script>
+}

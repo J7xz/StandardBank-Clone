@@ -1,0 +1,68 @@
+﻿@model StandardBank.Models.BillPayment
+
+@{
+    ViewBag.Title = "Payment Details";
+    ViewBag.SubTitle = "View payment information";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center animate-fade-in">
+    <div class="col-lg-6">
+        <div class="card card-elegant">
+            <div class="card-header">
+                <i class="fas fa-file-invoice me-2"></i>Payment Details
+            </div>
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <div class="d-inline-block p-3 rounded-3 bg-primary bg-opacity-10 mb-3">
+                        <i class="fas @(Model.BillType == "Electricity" ? "fa-bolt" :
+                                    Model.BillType == "Water" ? "fa-tint" :
+                                    Model.BillType == "DSTV" ? "fa-tv" :
+                                    Model.BillType == "Internet" ? "fa-wifi" : "fa-file-invoice") fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="fw-bold mb-1">@Model.BillType Bill</h5>
+                    <p class="text-muted small">@Model.PaymentDate.ToString("dd MMM yyyy HH:mm")</p>
+                    <span class="badge bg-@(Model.Status == "Completed" ? "success" : Model.Status == "Pending" ? "warning" : "danger") fs-6 px-3 py-2">
+                        @Model.Status
+                    </span>
+                </div>
+
+                <hr />
+
+                <div class="row g-3">
+                    <div class="col-6">
+                        <small class="text-muted d-block">Amount</small>
+                        <p class="fw-bold text-danger fs-5 mb-0">@Model.Amount.ToString("C")</p>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted d-block">Reference Number</small>
+                        <p class="fw-semibold mb-0">@Model.ReferenceNumber</p>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted d-block">Account Number</small>
+                        <p class="fw-semibold mb-0">@Model.Account?.AccountNumber</p>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted d-block">Payment Method</small>
+                        <p class="fw-semibold mb-0">Instant Payment</p>
+                    </div>
+                    <div class="col-12">
+                        <small class="text-muted d-block">Description</small>
+                        <p class="fw-semibold mb-0">@(string.IsNullOrEmpty(Model.Description) ? "N/A" : Model.Description)</p>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="d-flex gap-2">
+                    <a href="@Url.Action("Receipt", "BillPayment", new { id = Model.Id })" class="btn btn-primary flex-grow-1">
+                        <i class="fas fa-receipt me-2"></i>View Receipt
+                    </a>
+                    <a href="@Url.Action("Index", "BillPayment")" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

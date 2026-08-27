@@ -1,0 +1,98 @@
+﻿@model StandardBank.Models.BillPayment
+
+@{
+    ViewBag.Title = "Payment Receipt";
+    ViewBag.SubTitle = "Official payment receipt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center animate-fade-in">
+    <div class="col-lg-6">
+        <div class="card card-elegant p-4" id="receipt">
+            <div class="card-body">
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <div class="d-inline-block mb-2">
+                        <div class="logo-icon" style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #1a237e, #3949ab); display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                            <span style="font-size: 18px; font-weight: 800; color: #fff; letter-spacing: -0.5px;">J7</span>
+                        </div>
+                    </div>
+                    <h5 class="fw-bold mb-0">Standard Bank</h5>
+                    <p class="text-muted small">Official Payment Receipt</p>
+                </div>
+
+                <hr />
+
+                <!-- Receipt Details -->
+                <div class="row g-2">
+                    <div class="col-6">
+                        <small class="text-muted d-block">Receipt Number</small>
+                        <p class="fw-semibold mb-0">#@Model.Id.ToString("D6")</p>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted d-block">Date</small>
+                        <p class="fw-semibold mb-0">@Model.PaymentDate.ToString("dd MMM yyyy HH:mm")</p>
+                    </div>
+                    <div class="col-12">
+                        <small class="text-muted d-block">Bill Type</small>
+                        <p class="fw-semibold mb-0">@Model.BillType</p>
+                    </div>
+                    <div class="col-12">
+                        <small class="text-muted d-block">Reference Number</small>
+                        <p class="fw-semibold mb-0">@Model.ReferenceNumber</p>
+                    </div>
+                    <div class="col-12">
+                        <small class="text-muted d-block">Amount Paid</small>
+                        <p class="fw-bold text-primary fs-4 mb-0">@Model.Amount.ToString("C")</p>
+                    </div>
+                    <div class="col-12">
+                        <small class="text-muted d-block">Status</small>
+                        <p class="fw-semibold text-success mb-0">@Model.Status</p>
+                    </div>
+                    <div class="col-12">
+                        <small class="text-muted d-block">Description</small>
+                        <p class="fw-semibold mb-0">@(string.IsNullOrEmpty(Model.Description) ? "N/A" : Model.Description)</p>
+                    </div>
+                </div>
+
+                <hr />
+
+                <!-- Footer -->
+                <div class="text-center">
+                    <p class="text-muted small mb-0">Thank you for using Standard Bank</p>
+                    <p class="text-muted small mb-0">This is an official receipt for your records</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+            <button onclick="window.print()" class="btn btn-primary flex-grow-1">
+                <i class="fas fa-print me-2"></i>Print Receipt
+            </button>
+            <a href="@Url.Action("Index", "BillPayment")" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@media print {
+        .btn, .top-header, .sidebar, .sidebar-overlay {
+            display: none !important;
+        }
+
+        .main-content {
+            margin-left: 0 !important;
+        }
+
+        .page-content {
+            padding: 0 !important;
+        }
+
+        .card {
+            box-shadow: none !important;
+            border: 1px solid #ddd !important;
+        }
+    }
+</style>

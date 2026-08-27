@@ -1,0 +1,310 @@
+﻿@model StandardBank.ViewModels.AccountViewModel
+
+@{
+    ViewBag.Title = "My Accounts";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .quick-strip {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 28px;
+        background: #fff;
+        border-radius: 14px;
+        padding: 10px 14px;
+        border: 1px solid #eaedf2;
+        flex-wrap: wrap;
+    }
+
+        .quick-strip a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #0a1628;
+            font-weight: 500;
+            font-size: 14px;
+            transition: 0.2s;
+            flex: 1;
+            justify-content: center;
+            min-width: 100px;
+        }
+
+            .quick-strip a:hover {
+                background: #f0f2f7;
+            }
+
+            .quick-strip a i {
+                font-size: 15px;
+                color: #003399;
+            }
+
+            .quick-strip a .gold i {
+                color: #c9a84c;
+            }
+
+            .quick-strip a .purple i {
+                color: #7c3aed;
+            }
+
+    .accounts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 18px;
+    }
+
+    .account-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 20px 22px;
+        transition: 0.2s;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .account-card:hover {
+            border-color: #003399;
+            box-shadow: 0 4px 20px rgba(0,51,153,0.06);
+            transform: translateY(-2px);
+        }
+
+        .account-card .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+            .account-card .top .badge-type {
+                font-size: 11px;
+                font-weight: 600;
+                padding: 3px 14px;
+                border-radius: 20px;
+                background: #e8f0fe;
+                color: #003399;
+            }
+
+                .account-card .top .badge-type.savings {
+                    background: #dcfce7;
+                    color: #166534;
+                }
+
+                .account-card .top .badge-type.student {
+                    background: #fef3c7;
+                    color: #92400e;
+                }
+
+            .account-card .top .badge-status {
+                font-size: 10px;
+                font-weight: 600;
+                padding: 2px 12px;
+                border-radius: 20px;
+            }
+
+                .account-card .top .badge-status.active {
+                    background: #dcfce7;
+                    color: #166534;
+                }
+
+                .account-card .top .badge-status.closed {
+                    background: #fee2e2;
+                    color: #991b1b;
+                }
+
+        .account-card .number {
+            font-size: 13px;
+            color: #6b7a8f;
+            margin-bottom: 4px;
+        }
+
+        .account-card .balance {
+            font-size: 26px;
+            font-weight: 700;
+            color: #0a1628;
+        }
+
+        .account-card .name {
+            font-size: 14px;
+            color: #6b7a8f;
+            margin-top: 2px;
+        }
+
+        .account-card .actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid #f5f7fa;
+        }
+
+            .account-card .actions a {
+                padding: 6px 16px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 500;
+                text-decoration: none;
+                transition: 0.2s;
+            }
+
+            .account-card .actions .view-btn {
+                background: #003399;
+                color: #fff;
+                flex: 1;
+                text-align: center;
+            }
+
+                .account-card .actions .view-btn:hover {
+                    background: #002266;
+                }
+
+            .account-card .actions .transfer-btn {
+                background: #f0f2f7;
+                color: #0a1628;
+                padding: 6px 14px;
+            }
+
+                .account-card .actions .transfer-btn:hover {
+                    background: #e5e8ef;
+                }
+
+    .empty-state {
+        grid-column: 1 / -1;
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 60px 20px;
+        text-align: center;
+        color: #6b7a8f;
+    }
+
+        .empty-state i {
+            font-size: 40px;
+            opacity: 0.15;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .empty-state .main {
+            font-size: 16px;
+            font-weight: 500;
+            color: #0a1628;
+        }
+
+        .empty-state .sub {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .empty-state a {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 28px;
+            background: #003399;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .empty-state a:hover {
+                background: #002266;
+            }
+
+    @@media (max-width: 600px) {
+        .quick-strip {
+            flex-direction: column;
+        }
+
+            .quick-strip a {
+                justify-content: flex-start;
+            }
+
+        .accounts-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .account-card .balance {
+            font-size: 22px;
+        }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1>My Accounts</h1>
+        <p>Manage all your accounts in one place</p>
+    </div>
+
+    <!-- Quick Actions (3 items - Deposit removed) -->
+    <div class="quick-strip">
+        <a href="@Url.Action("Transfer", "Banking")">
+            <i class="fas fa-paper-plane"></i> Send Money
+        </a>
+        <a href="@Url.Action("History", "Banking")" class="gold">
+            <i class="fas fa-clock"></i> History
+        </a>
+        <a href="@Url.Action("CreateAccount", "Banking")" class="purple">
+            <i class="fas fa-plus-circle"></i> New Account
+        </a>
+    </div>
+
+    <!-- Accounts Grid -->
+    <div class="accounts-grid">
+        @if (Model.Accounts != null && Model.Accounts.Any())
+        {
+            foreach (var account in Model.Accounts)
+            {
+                var badgeClass = account.AccountType == "Cheque" ? "" : account.AccountType == "Savings" ? "savings" : "student";
+                <div class="account-card">
+                    <div class="top">
+                        <span class="badge-type @badgeClass">@account.AccountType</span>
+                        <span class="badge-status @(account.IsActive ? "active" : "closed")">@(account.IsActive ? "Active" : "Closed")</span>
+                    </div>
+                    <div class="number">@account.AccountNumber</div>
+                    <div class="balance">@account.Balance.ToString("C")</div>
+                    <div class="name">@account.AccountName</div>
+                    <div class="actions">
+                        <a href="@Url.Action("AccountDetails", "Banking", new { id = account.Id })" class="view-btn">View Details</a>
+                        <a href="@Url.Action("Transfer", "Banking", new { fromAccountId = account.Id })" class="transfer-btn">
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-wallet"></i>
+                <div class="main">No accounts yet</div>
+                <div class="sub">Open your first account to get started</div>
+                <a href="@Url.Action("CreateAccount", "Banking")">Open an Account</a>
+            </div>
+        }
+    </div>
+
+</div>

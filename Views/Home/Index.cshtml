@@ -1,0 +1,123 @@
+﻿@{
+    ViewBag.Title = "Welcome";
+    Layout = "~/Views/Shared/_LayoutLanding.cshtml";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="text-center py-5">
+        <h1 class="display-4 fw-bold">Welcome Back!</h1>
+        <p class="lead">You are already logged in.</p>
+        <a href="@Url.Action("Index", "Dashboard")" class="btn btn-primary btn-lg">
+            <i class="fas fa-th-large me-2"></i>Go to Dashboard
+        </a>
+    </div>
+}
+else
+{
+    <!-- Hero Section -->
+    <section class="hero-section" style="min-height: 80vh; background: linear-gradient(135deg, #0d1445 0%, #1a237e 50%, #283593 100%); display: flex; align-items: center; padding: 60px 0; position: relative; overflow: hidden;">
+        <div class="container position-relative" style="z-index: 2;">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="mb-4">
+                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">🔒 Trusted by 50K+ Users</span>
+                    </div>
+                    <h1 class="display-2 fw-bold text-white" style="font-size: 52px;">
+                        Banking Made<br>
+                        <span style="background: linear-gradient(135deg, #ffd54f, #ffca28); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Simple & Secure</span>
+                    </h1>
+                    <p class="lead text-white-50" style="max-width: 480px;">
+                        Manage your money, pay bills, and track your savings all in one place.
+                    </p>
+                    <div class="d-flex gap-3 mt-4 flex-wrap">
+                        <a href="@Url.Action("Register", "Account")" class="btn btn-warning btn-lg px-5 py-3 fw-bold" style="background: linear-gradient(135deg, #ffd54f, #ffca28); color: #1a237e;">
+                            <i class="fas fa-rocket me-2"></i>Get Started
+                        </a>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-outline-light btn-lg px-5 py-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                        </a>
+                    </div>
+                    <div class="d-flex gap-5 mt-5">
+                        <div>
+                            <h3 class="text-white fw-bold">50K+</h3>
+                            <p class="text-white-50 small">Active Users</p>
+                        </div>
+                        <div>
+                            <h3 class="text-white fw-bold">R2.5M+</h3>
+                            <p class="text-white-50 small">Transactions</p>
+                        </div>
+                        <div>
+                            <h3 class="text-white fw-bold">4.9★</h3>
+                            <p class="text-white-50 small">User Rating</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center d-none d-lg-block">
+                    <div class="p-4" style="background: rgba(255,255,255,0.05); border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px);">
+                        <div style="width: 100%; max-width: 380px; margin: 0 auto; background: #1a1a2e; border-radius: 30px; padding: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                            <div style="background: linear-gradient(135deg, #1a237e, #3949ab); border-radius: 20px; padding: 30px; min-height: 350px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                <i class="fas fa-wallet text-warning" style="font-size: 60px;"></i>
+                                <h4 class="text-white mt-3">Standard Bank</h4>
+                                <p class="text-white-50 small text-center">Your money, your future.</p>
+                                <div class="mt-3 d-flex gap-2">
+                                    <span class="badge bg-warning text-dark">Secure</span>
+                                    <span class="badge bg-light text-dark">Fast</span>
+                                    <span class="badge bg-light text-dark">Reliable</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section style="padding: 80px 0; background: #f5f7fb;">
+        <div class="container">
+            <h2 class="text-center fw-bold" style="color: #1a237e;">Why Choose Standard Bank</h2>
+            <p class="text-center text-muted" style="max-width: 600px; margin: 0 auto 48px;">Powerful features to help you manage your finances better.</p>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card border-0 text-center p-4" style="border-radius: 16px; box-shadow: 0 4px 24px rgba(26,35,126,0.06);">
+                        <div class="bg-primary bg-opacity-10 rounded-3 p-3 d-inline-block mx-auto" style="width: 60px; height: 60px;">
+                            <i class="fas fa-shield-alt text-primary fs-3"></i>
+                        </div>
+                        <h5 class="fw-bold mt-3">Secure Banking</h5>
+                        <p class="text-muted small">Bank-grade encryption to keep your money safe.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 text-center p-4" style="border-radius: 16px; box-shadow: 0 4px 24px rgba(26,35,126,0.06);">
+                        <div class="bg-success bg-opacity-10 rounded-3 p-3 d-inline-block mx-auto" style="width: 60px; height: 60px;">
+                            <i class="fas fa-mobile-alt text-success fs-3"></i>
+                        </div>
+                        <h5 class="fw-bold mt-3">Mobile Banking</h5>
+                        <p class="text-muted small">Access your accounts anytime, anywhere.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 text-center p-4" style="border-radius: 16px; box-shadow: 0 4px 24px rgba(26,35,126,0.06);">
+                        <div class="bg-warning bg-opacity-10 rounded-3 p-3 d-inline-block mx-auto" style="width: 60px; height: 60px;">
+                            <i class="fas fa-chart-line text-warning fs-3"></i>
+                        </div>
+                        <h5 class="fw-bold mt-3">Smart Insights</h5>
+                        <p class="text-muted small">AI-powered insights to manage your finances.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="padding: 80px 0; background: linear-gradient(135deg, #1a237e, #283593); text-align: center;">
+        <div class="container">
+            <h2 class="text-white fw-bold">Ready to Get Started?</h2>
+            <p class="text-white-50" style="max-width: 500px; margin: 0 auto 32px;">Join thousands of satisfied customers and take control of your finances today.</p>
+            <a href="@Url.Action("Register", "Account")" class="btn btn-warning btn-lg px-5 py-3 fw-bold" style="background: linear-gradient(135deg, #ffd54f, #ffca28); color: #1a237e;">
+                <i class="fas fa-rocket me-2"></i>Create Free Account
+            </a>
+        </div>
+    </section>
+}

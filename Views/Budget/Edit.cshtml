@@ -1,0 +1,217 @@
+﻿@model StandardBank.ViewModels.EditBudgetViewModel
+
+@{
+    ViewBag.Title = "Edit Budget";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .form-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 28px 32px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+        .form-card .form-group {
+            margin-bottom: 18px;
+        }
+
+            .form-card .form-group label {
+                font-size: 13px;
+                font-weight: 600;
+                color: #0a1628;
+                display: block;
+                margin-bottom: 4px;
+            }
+
+            .form-card .form-group .form-control,
+            .form-card .form-group .form-select {
+                width: 100%;
+                padding: 10px 14px;
+                border: 1px solid #eaedf2;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: 'Inter', sans-serif;
+                transition: 0.2s;
+                background: #fff;
+                color: #0a1628;
+                appearance: auto;
+            }
+
+                .form-card .form-group .form-control:focus,
+                .form-card .form-group .form-select:focus {
+                    border-color: #003399;
+                    outline: none;
+                    box-shadow: 0 0 0 3px rgba(0,51,153,0.06);
+                }
+
+            .form-card .form-group .hint {
+                font-size: 12px;
+                color: #6b7a8f;
+                margin-top: 4px;
+            }
+
+        .form-card .amount-input {
+            position: relative;
+        }
+
+            .form-card .amount-input .currency {
+                position: absolute;
+                left: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-weight: 600;
+                color: #6b7a8f;
+                font-size: 15px;
+            }
+
+            .form-card .amount-input input {
+                padding-left: 32px;
+            }
+
+        .form-card .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #003399;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 4px;
+        }
+
+            .form-card .submit-btn:hover {
+                background: #002266;
+            }
+
+    .text-danger {
+        color: #dc2626;
+        font-size: 13px;
+        margin-top: 4px;
+        display: block;
+    }
+
+    .btn-secondary {
+        padding: 10px 24px;
+        background: #f0f2f7;
+        color: #0a1628;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-secondary:hover {
+            background: #e5e8ef;
+        }
+
+    .readonly-input {
+        background: #f8fafc;
+        color: #6b7a8f;
+        cursor: not-allowed;
+    }
+
+    @@media (max-width: 600px) {
+        .form-card {
+            padding: 20px;
+        }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Edit Budget</h1>
+        <p>Update your budget</p>
+    </div>
+
+    <!-- Form -->
+    <div class="form-card">
+
+        @using (Html.BeginForm("Edit", "Budget", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(m => m.Id)
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Category, "Category")
+                @Html.DropDownListFor(m => m.Category,
+                    new SelectList(Model.BudgetCategories),
+                    new { @class = "form-select" })
+                @Html.ValidationMessageFor(m => m.Category, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.AllocatedAmount, "Allocated Amount")
+                <div class="amount-input">
+                    <span class="currency">R</span>
+                    @Html.TextBoxFor(m => m.AllocatedAmount, new { @class = "form-control", type = "number", step = "0.01" })
+                </div>
+                @Html.ValidationMessageFor(m => m.AllocatedAmount, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.SpentAmount, "Spent Amount")
+                <div class="amount-input">
+                    <span class="currency">R</span>
+                    @Html.TextBoxFor(m => m.SpentAmount, new { @class = "form-control readonly-input", type = "number", step = "0.01", @readonly = "readonly" })
+                </div>
+                <div class="hint">This is auto-calculated from your transactions</div>
+            </div>
+
+            <div class="row" style="display:flex; gap:16px; margin-bottom:18px;">
+                <div class="form-group" style="flex:1;">
+                    @Html.LabelFor(m => m.Month, "Month")
+                    @Html.DropDownListFor(m => m.Month,
+                        new SelectList(Enumerable.Range(1, 12).Select(i => new { Value = i, Text = new DateTime(DateTime.Now.Year, i, 1).ToString("MMMM") }), "Value", "Text"),
+                        new { @class = "form-select" })
+                </div>
+                <div class="form-group" style="flex:1;">
+                    @Html.LabelFor(m => m.Year, "Year")
+                    @Html.DropDownListFor(m => m.Year,
+                        new SelectList(Enumerable.Range(DateTime.Now.Year - 2, 5).Select(i => new { Value = i, Text = i.ToString() }), "Value", "Text"),
+                        new { @class = "form-select" })
+                </div>
+            </div>
+
+            <div style="display:flex; gap:12px;">
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-save me-2"></i>Update Budget
+                </button>
+                <a href="@Url.Action("Index", "Budget")" class="btn-secondary">Cancel</a>
+            </div>
+        }
+
+    </div>
+
+</div>

@@ -1,0 +1,452 @@
+﻿@model StandardBank.ViewModels.SavingsGoalViewModel
+
+@{
+    ViewBag.Title = "Savings Goals";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+
+    .stat-box {
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px 20px;
+        border: 1px solid #eaedf2;
+    }
+
+        .stat-box .label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6b7a8f;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-box .number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 2px 0;
+        }
+
+        .stat-box .sub {
+            font-size: 13px;
+            color: #6b7a8f;
+        }
+
+    .goal-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 18px;
+    }
+
+    .goal-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 20px 22px;
+        transition: 0.2s;
+    }
+
+        .goal-card:hover {
+            border-color: #003399;
+            box-shadow: 0 4px 20px rgba(0,51,153,0.06);
+            transform: translateY(-2px);
+        }
+
+        .goal-card.completed {
+            border-color: #16a34a;
+        }
+
+        .goal-card .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+            .goal-card .top .name {
+                font-size: 16px;
+                font-weight: 600;
+                color: #0a1628;
+            }
+
+            .goal-card .top .badge {
+                font-size: 10px;
+                font-weight: 600;
+                padding: 3px 12px;
+                border-radius: 20px;
+            }
+
+                .goal-card .top .badge.active {
+                    background: #e8f0fe;
+                    color: #003399;
+                }
+
+                .goal-card .top .badge.completed {
+                    background: #dcfce7;
+                    color: #166534;
+                }
+
+        .goal-card .amounts {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 6px;
+        }
+
+            .goal-card .amounts .current {
+                font-size: 20px;
+                font-weight: 700;
+                color: #0a1628;
+            }
+
+            .goal-card .amounts .target {
+                font-size: 13px;
+                color: #6b7a8f;
+            }
+
+        .goal-card .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #eef2f6;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 6px 0 4px;
+        }
+
+            .goal-card .progress-bar .fill {
+                height: 100%;
+                border-radius: 6px;
+                transition: width 0.4s;
+            }
+
+        .goal-card .bottom-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #6b7a8f;
+            margin-bottom: 12px;
+        }
+
+        .goal-card .actions {
+            display: flex;
+            gap: 8px;
+            padding-top: 14px;
+            border-top: 1px solid #f5f7fa;
+        }
+
+            .goal-card .actions a {
+                padding: 6px 14px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 500;
+                text-decoration: none;
+                transition: 0.2s;
+                text-align: center;
+            }
+
+            .goal-card .actions .add-btn {
+                background: #16a34a;
+                color: #fff;
+                flex: 1;
+            }
+
+                .goal-card .actions .add-btn:hover {
+                    background: #15803d;
+                }
+
+            .goal-card .actions .withdraw-btn {
+                background: #f0f2f7;
+                color: #0a1628;
+                padding: 6px 12px;
+            }
+
+                .goal-card .actions .withdraw-btn:hover {
+                    background: #e5e8ef;
+                }
+
+            .goal-card .actions .edit-btn {
+                background: #f0f2f7;
+                color: #0a1628;
+                padding: 6px 12px;
+            }
+
+                .goal-card .actions .edit-btn:hover {
+                    background: #e5e8ef;
+                }
+
+            .goal-card .actions .delete-btn {
+                background: #fef2f2;
+                color: #dc2626;
+                padding: 6px 12px;
+            }
+
+                .goal-card .actions .delete-btn:hover {
+                    background: #fee2e2;
+                }
+
+    .btn-primary {
+        padding: 10px 24px;
+        background: #003399;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-primary:hover {
+            background: #002266;
+            color: #fff;
+        }
+
+    .empty-state {
+        grid-column: 1 / -1;
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 60px 20px;
+        text-align: center;
+        color: #6b7a8f;
+    }
+
+        .empty-state i {
+            font-size: 40px;
+            opacity: 0.15;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .empty-state .main {
+            font-size: 16px;
+            font-weight: 500;
+            color: #0a1628;
+        }
+
+        .empty-state .sub {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .empty-state a {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 28px;
+            background: #003399;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .empty-state a:hover {
+                background: #002266;
+            }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+
+    .alert-danger {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+
+    @@media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .goal-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .goal-card .actions {
+            flex-wrap: wrap;
+        }
+
+            .goal-card .actions .add-btn {
+                flex: 1 1 100%;
+            }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1>Savings Goals</h1>
+            <p>Track and achieve your savings targets</p>
+        </div>
+        <a href="@Url.Action("Create", "Savings")" class="btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>New Goal
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+        </div>
+    }
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="label">Active Goals</div>
+            <div class="number">@Model.ActiveGoals</div>
+        </div>
+        <div class="stat-box">
+            <div class="label">Completed Goals</div>
+            <div class="number text-success">@Model.CompletedGoals</div>
+        </div>
+        <div class="stat-box">
+            <div class="label">Total Target</div>
+            <div class="number">@Model.TotalTargetAmount.ToString("C")</div>
+        </div>
+        <div class="stat-box">
+            <div class="label">Total Saved</div>
+            <div class="number text-success">@Model.TotalCurrentAmount.ToString("C")</div>
+        </div>
+    </div>
+
+    <!-- Goals Grid -->
+    <div class="goal-grid">
+        @if (Model.SavingsGoals != null && Model.SavingsGoals.Any())
+        {
+            foreach (var goal in Model.SavingsGoals)
+            {
+                var pct = goal.ProgressPercentage;
+                var isCompleted = goal.IsCompleted;
+                var daysLeft = goal.Deadline.HasValue ? (goal.Deadline.Value - DateTime.Now).Days : 0;
+
+                <div class="goal-card @(isCompleted ? "completed" : "")">
+                    <div class="top">
+                        <span class="name">@goal.GoalName</span>
+                        <span class="badge @(isCompleted ? "completed" : "active")">
+                            @(isCompleted ? "✅ Completed" : "In Progress")
+                        </span>
+                    </div>
+
+                    <div class="amounts">
+                        <span class="current">@goal.CurrentAmount.ToString("C")</span>
+                        <span class="target">of @goal.TargetAmount.ToString("C")</span>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div class="fill" style="width:@(pct>100?100:pct)%; background:@(pct>=100?"#16a34a":pct>=70?"#c9a84c":"#003399");"></div>
+                    </div>
+
+                    <div class="bottom-row">
+                        <span>@pct.ToString("F0")% complete</span>
+                        @if (!isCompleted && goal.Deadline.HasValue)
+                        {
+                            <span style="color:@(daysLeft<30?"#dc2626":"#6b7a8f");">
+                                <i class="fas fa-clock me-1"></i>@daysLeft days left
+                            </span>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(goal.Description))
+                    {
+                        <p style="font-size:13px; color:#6b7a8f; margin-bottom:12px;">@goal.Description</p>
+                    }
+
+                    <div class="actions">
+                        @if (!isCompleted)
+                        {
+                            <a href="@Url.Action("AddFunds", "Savings", new { id = goal.Id })" class="add-btn">
+                                <i class="fas fa-plus me-1"></i>Add Funds
+                            </a>
+                            if (goal.CurrentAmount > 0)
+                            {
+                                <a href="@Url.Action("WithdrawFunds", "Savings", new { id = goal.Id })" class="withdraw-btn" title="Withdraw">
+                                    <i class="fas fa-minus"></i>
+                                </a>
+                            }
+                        }
+                        <a href="@Url.Action("Edit", "Savings", new { id = goal.Id })" class="edit-btn" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="@Url.Action("Delete", "Savings", new { id = goal.Id })" class="delete-btn" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-piggy-bank"></i>
+                <div class="main">No savings goals yet</div>
+                <div class="sub">Start saving towards your dreams today</div>
+                <a href="@Url.Action("Create", "Savings")">Create Your First Goal</a>
+            </div>
+        }
+    </div>
+
+</div>

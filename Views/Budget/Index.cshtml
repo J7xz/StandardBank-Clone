@@ -1,0 +1,451 @@
+﻿@model StandardBank.ViewModels.BudgetViewModel
+
+@{
+    ViewBag.Title = "Budget";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var monthName = new DateTime(Model.CurrentYear, Model.CurrentMonth, 1).ToString("MMMM yyyy");
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+
+    .stat-box {
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px 20px;
+        border: 1px solid #eaedf2;
+    }
+
+        .stat-box .label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6b7a8f;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-box .number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 2px 0;
+        }
+
+            .stat-box .number.green {
+                color: #16a34a;
+            }
+
+            .stat-box .number.red {
+                color: #dc2626;
+            }
+
+    .budget-item {
+        padding: 16px 20px;
+        border-bottom: 1px solid #f5f7fa;
+        transition: 0.2s;
+    }
+
+        .budget-item:hover {
+            background: #fafbfc;
+        }
+
+        .budget-item:last-child {
+            border-bottom: none;
+        }
+
+        .budget-item .row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .budget-item .category {
+            flex: 0 0 150px;
+        }
+
+            .budget-item .category .name {
+                font-weight: 600;
+                color: #0a1628;
+                font-size: 15px;
+            }
+
+            .budget-item .category .status {
+                font-size: 12px;
+            }
+
+                .budget-item .category .status.over {
+                    color: #dc2626;
+                }
+
+                .budget-item .category .status.near {
+                    color: #eab308;
+                }
+
+                .budget-item .category .status.ontrack {
+                    color: #16a34a;
+                }
+
+        .budget-item .progress-wrap {
+            flex: 1;
+            min-width: 200px;
+        }
+
+            .budget-item .progress-wrap .labels {
+                display: flex;
+                justify-content: space-between;
+                font-size: 13px;
+                color: #6b7a8f;
+                margin-bottom: 4px;
+            }
+
+            .budget-item .progress-wrap .bar {
+                width: 100%;
+                height: 6px;
+                background: #eef2f6;
+                border-radius: 6px;
+                overflow: hidden;
+            }
+
+                .budget-item .progress-wrap .bar .fill {
+                    height: 100%;
+                    border-radius: 6px;
+                    transition: width 0.4s;
+                }
+
+            .budget-item .progress-wrap .bottom {
+                font-size: 12px;
+                color: #6b7a8f;
+                margin-top: 4px;
+            }
+
+        .budget-item .actions {
+            display: flex;
+            gap: 6px;
+            flex: 0 0 auto;
+        }
+
+            .budget-item .actions a {
+                padding: 4px 10px;
+                border-radius: 6px;
+                font-size: 13px;
+                text-decoration: none;
+                transition: 0.2s;
+            }
+
+            .budget-item .actions .edit {
+                background: #f0f2f7;
+                color: #0a1628;
+            }
+
+                .budget-item .actions .edit:hover {
+                    background: #e5e8ef;
+                }
+
+            .budget-item .actions .delete {
+                background: #fef2f2;
+                color: #dc2626;
+            }
+
+                .budget-item .actions .delete:hover {
+                    background: #fee2e2;
+                }
+
+    .btn-primary {
+        padding: 10px 20px;
+        background: #003399;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-primary:hover {
+            background: #002266;
+            color: #fff;
+        }
+
+    .btn-outline {
+        padding: 10px 20px;
+        background: transparent;
+        color: #003399;
+        border: 1px solid #003399;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-outline:hover {
+            background: #003399;
+            color: #fff;
+        }
+
+    .empty-state {
+        padding: 48px 20px;
+        text-align: center;
+        color: #6b7a8f;
+    }
+
+        .empty-state i {
+            font-size: 40px;
+            opacity: 0.15;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .empty-state .main {
+            font-size: 16px;
+            font-weight: 500;
+            color: #0a1628;
+        }
+
+        .empty-state .sub {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+    .month-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid #eaedf2;
+    }
+
+        .month-nav .current {
+            font-weight: 600;
+            font-size: 15px;
+            color: #0a1628;
+        }
+
+        .month-nav a {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            text-decoration: none;
+            transition: 0.2s;
+            color: #6b7a8f;
+            border: 1px solid #eaedf2;
+            background: #fff;
+        }
+
+            .month-nav a:hover {
+                border-color: #003399;
+                color: #003399;
+            }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+
+    .alert-danger {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+
+    @@media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .budget-item .row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .budget-item .category {
+            flex: auto;
+        }
+
+        .budget-item .progress-wrap {
+            min-width: auto;
+        }
+
+        .budget-item .actions {
+            justify-content: flex-end;
+        }
+
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .month-nav {
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1>Budget Tracker</h1>
+            <p>@monthName</p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a href="@Url.Action("Insights", "Budget", new { month = Model.CurrentMonth, year = Model.CurrentYear })" class="btn-outline">
+                <i class="fas fa-brain me-2"></i>Insights
+            </a>
+            <a href="@Url.Action("Create", "Budget", new { month = Model.CurrentMonth, year = Model.CurrentYear })" class="btn-primary">
+                <i class="fas fa-plus-circle me-2"></i>Add Budget
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+        </div>
+    }
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="label">Total Allocated</div>
+            <div class="number">@Model.TotalAllocated.ToString("C")</div>
+        </div>
+        <div class="stat-box">
+            <div class="label">Total Spent</div>
+            <div class="number red">@Model.TotalSpent.ToString("C")</div>
+        </div>
+        <div class="stat-box">
+            <div class="label">Total Remaining</div>
+            <div class="number green">@Model.TotalRemaining.ToString("C")</div>
+        </div>
+    </div>
+
+    <!-- Budget List -->
+    <div class="card-sb" style="background:#fff; border-radius:14px; border:1px solid #eaedf2; overflow:hidden;">
+        <div style="padding:14px 20px; border-bottom:1px solid #eaedf2; background:#fafbfc; font-weight:600; font-size:14px; color:#0a1628;">
+            <i class="fas fa-list me-2" style="color:#003399;"></i>Your Budgets
+        </div>
+        <div>
+            @if (Model.Budgets != null && Model.Budgets.Any())
+            {
+                foreach (var budget in Model.Budgets)
+                {
+                    var pct = budget.SpentPercentage;
+                    var statusClass = pct > 100 ? "over" : pct >= 80 ? "near" : "ontrack";
+                    var statusText = pct > 100 ? "Over Budget" : pct >= 80 ? "Near Limit" : "On Track";
+                    var barColor = pct > 100 ? "#dc2626" : pct >= 80 ? "#eab308" : "#16a34a";
+
+                    <div class="budget-item">
+                        <div class="row">
+                            <div class="category">
+                                <div class="name">@budget.Category</div>
+                                <div class="status @statusClass">@statusText</div>
+                            </div>
+                            <div class="progress-wrap">
+                                <div class="labels">
+                                    <span>R @budget.SpentAmount.ToString("N2") spent</span>
+                                    <span>of R @budget.AllocatedAmount.ToString("N2")</span>
+                                </div>
+                                <div class="bar">
+                                    <div class="fill" style="width:@(pct>100?100:pct)%; background:@barColor;"></div>
+                                </div>
+                                <div class="bottom">@(pct > 100 ? "Exceeded by " + (pct - 100).ToString("F0") + "%" : pct.ToString("F0") + "% used")</div>
+                            </div>
+                            <div class="actions">
+                                <a href="@Url.Action("Edit", "Budget", new { id = budget.Id })" class="edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="@Url.Action("Delete", "Budget", new { id = budget.Id })" class="delete">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-chart-pie"></i>
+                    <div class="main">No Budgets Set</div>
+                    <div class="sub">Create your first budget to start tracking your spending</div>
+                    <a href="@Url.Action("Create", "Budget")" class="btn-primary" style="margin-top:12px;">
+                        <i class="fas fa-plus-circle me-2"></i>Create Budget
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Month Navigation -->
+    <div class="month-nav">
+        <a href="@Url.Action("Index", "Budget", new { month = Model.CurrentMonth - 1, year = Model.CurrentMonth == 1 ? Model.CurrentYear - 1 : Model.CurrentYear })">
+            <i class="fas fa-chevron-left me-2"></i>Previous
+        </a>
+        <span class="current">@monthName</span>
+        <a href="@Url.Action("Index", "Budget", new { month = Model.CurrentMonth + 1, year = Model.CurrentMonth == 12 ? Model.CurrentYear + 1 : Model.CurrentYear })">
+            Next <i class="fas fa-chevron-right ms-2"></i>
+        </a>
+    </div>
+
+</div>

@@ -1,0 +1,322 @@
+﻿@model StandardBank.ViewModels.ProfileViewModel
+
+@{
+    ViewBag.Title = "My Profile";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 24px;
+    }
+
+    .profile-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 24px;
+        text-align: center;
+    }
+
+        .profile-card .avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #003399, #1a4cb3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 36px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .profile-card .name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0a1628;
+        }
+
+        .profile-card .email {
+            font-size: 14px;
+            color: #6b7a8f;
+            margin-top: 2px;
+        }
+
+        .profile-card .status {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+            .profile-card .status.active {
+                background: #dcfce7;
+                color: #166534;
+            }
+
+            .profile-card .status.inactive {
+                background: #fee2e2;
+                color: #991b1b;
+            }
+
+        .profile-card .divider {
+            border: none;
+            border-top: 1px solid #eaedf2;
+            margin: 16px 0;
+        }
+
+        .profile-card .info-grid {
+            text-align: left;
+        }
+
+            .profile-card .info-grid .row {
+                display: flex;
+                justify-content: space-between;
+                padding: 8px 0;
+                border-bottom: 1px solid #f5f7fa;
+                font-size: 14px;
+            }
+
+                .profile-card .info-grid .row:last-child {
+                    border-bottom: none;
+                }
+
+                .profile-card .info-grid .row .label {
+                    color: #6b7a8f;
+                }
+
+                .profile-card .info-grid .row .value {
+                    font-weight: 500;
+                    color: #0a1628;
+                }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .quick-action-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 20px;
+        transition: 0.2s;
+        text-decoration: none;
+        display: block;
+    }
+
+        .quick-action-card:hover {
+            border-color: #003399;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,51,153,0.06);
+        }
+
+        .quick-action-card .icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+            .quick-action-card .icon.blue {
+                background: #e8f0fe;
+                color: #003399;
+            }
+
+            .quick-action-card .icon.green {
+                background: #ecfdf5;
+                color: #16a34a;
+            }
+
+            .quick-action-card .icon.gold {
+                background: #f5e6b8;
+                color: #c9a84c;
+            }
+
+            .quick-action-card .icon.red {
+                background: #fef2f2;
+                color: #dc2626;
+            }
+
+        .quick-action-card .title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0a1628;
+        }
+
+        .quick-action-card .sub {
+            font-size: 13px;
+            color: #6b7a8f;
+            margin-top: 2px;
+        }
+
+    .danger-zone {
+        margin-top: 24px;
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #fecaca;
+        overflow: hidden;
+    }
+
+        .danger-zone .head {
+            padding: 14px 20px;
+            background: #fef2f2;
+            border-bottom: 1px solid #fecaca;
+            font-weight: 600;
+            color: #dc2626;
+            font-size: 14px;
+        }
+
+        .danger-zone .body {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+            .danger-zone .body p {
+                margin: 0;
+                font-size: 14px;
+                color: #6b7a8f;
+            }
+
+            .danger-zone .body .btn-danger {
+                padding: 8px 20px;
+                background: #dc2626;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: 0.2s;
+                text-decoration: none;
+                display: inline-block;
+            }
+
+                .danger-zone .body .btn-danger:hover {
+                    background: #b91c1c;
+                }
+
+    @@media (max-width: 768px) {
+        .profile-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .quick-actions {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .quick-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .danger-zone .body {
+            flex-direction: column;
+            align-items: stretch;
+            text-align: center;
+        }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1>My Profile</h1>
+        <p>View and manage your personal information</p>
+    </div>
+
+    <!-- Profile Grid -->
+    <div class="profile-grid">
+
+        <!-- Left - Profile Card -->
+        <div class="profile-card">
+            <div class="avatar">@Model.FullName.Substring(0, 1).ToUpper()</div>
+            <div class="name">@Model.FullName</div>
+            <div class="email">@Model.Email</div>
+            <span class="status @(Model.IsActive ? "active" : "inactive")">@(Model.IsActive ? "Active" : "Inactive")</span>
+
+            <hr class="divider" />
+
+            <div class="info-grid">
+                <div class="row">
+                    <span class="label">Phone</span>
+                    <span class="value">@Model.PhoneNumber</span>
+                </div>
+                <div class="row">
+                    <span class="label">ID Number</span>
+                    <span class="value">@Model.IDNumber</span>
+                </div>
+                <div class="row">
+                    <span class="label">Registered</span>
+                    <span class="value">@Model.DateRegistered</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right - Quick Actions -->
+        <div>
+            <div class="quick-actions">
+                <a href="@Url.Action("EditProfile", "Account")" class="quick-action-card">
+                    <div class="icon blue"><i class="fas fa-user-edit"></i></div>
+                    <div class="title">Edit Profile</div>
+                    <div class="sub">Update your details</div>
+                </a>
+                <a href="@Url.Action("ChangePassword", "Account")" class="quick-action-card">
+                    <div class="icon gold"><i class="fas fa-key"></i></div>
+                    <div class="title">Change Password</div>
+                    <div class="sub">Update your security</div>
+                </a>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="danger-zone">
+                <div class="head">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Danger Zone
+                </div>
+                <div class="body">
+                    <p><strong>Delete Account</strong> — Permanently delete your account and all data.</p>
+                    <a href="@Url.Action("DeleteAccount", "Profile")" class="btn-danger">
+                        <i class="fas fa-trash me-2"></i>Delete Account
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

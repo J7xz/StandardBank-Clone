@@ -1,0 +1,15 @@
+# Visual Studio  
+bin/  
+obj/  
+packages/  
+.vs/  
+*.user  
+*.suo  
+*.sln.docstates  
+[Dd]ebug/  
+[Rr]elease/  
+build/  
+*.pdb  
+*.log  
+*.sqlite  
+*.sqlite3 

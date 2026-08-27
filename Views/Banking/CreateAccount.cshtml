@@ -1,0 +1,357 @@
+﻿@model StandardBank.ViewModels.CreateAccountViewModel
+
+@{
+    ViewBag.Title = "Open New Account";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .form-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 28px 32px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+        .form-card .form-group {
+            margin-bottom: 18px;
+        }
+
+            .form-card .form-group label {
+                font-size: 13px;
+                font-weight: 600;
+                color: #0a1628;
+                display: block;
+                margin-bottom: 4px;
+            }
+
+            .form-card .form-group .form-control,
+            .form-card .form-group .form-select {
+                width: 100%;
+                padding: 10px 14px;
+                border: 1px solid #eaedf2;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: 'Inter', sans-serif;
+                transition: 0.2s;
+                background: #fff;
+                color: #0a1628;
+                appearance: auto;
+            }
+
+                .form-card .form-group .form-control:focus,
+                .form-card .form-group .form-select:focus {
+                    border-color: #003399;
+                    outline: none;
+                    box-shadow: 0 0 0 3px rgba(0,51,153,0.06);
+                }
+
+                .form-card .form-group .form-control::placeholder {
+                    color: #9aa3b3;
+                }
+
+            .form-card .form-group .hint {
+                font-size: 12px;
+                color: #6b7a8f;
+                margin-top: 4px;
+            }
+
+        .form-card .amount-input {
+            position: relative;
+        }
+
+            .form-card .amount-input .currency {
+                position: absolute;
+                left: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-weight: 600;
+                color: #6b7a8f;
+                font-size: 15px;
+            }
+
+            .form-card .amount-input input {
+                padding-left: 32px;
+            }
+
+        .form-card .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #003399;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 4px;
+        }
+
+            .form-card .submit-btn:hover {
+                background: #002266;
+            }
+
+    .account-types-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 12px;
+    }
+
+    .account-type-card {
+        text-align: center;
+        padding: 16px 12px;
+        border: 1px solid #eaedf2;
+        border-radius: 10px;
+        transition: 0.2s;
+        cursor: pointer;
+        background: #fff;
+    }
+
+        .account-type-card:hover {
+            border-color: #003399;
+            background: #f8fafc;
+        }
+
+        .account-type-card.selected {
+            border-color: #003399;
+            background: #e8f0fe;
+            box-shadow: 0 0 0 2px rgba(0,51,153,0.1);
+        }
+
+        .account-type-card i {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 6px;
+            color: #6b7a8f;
+        }
+
+        .account-type-card.selected i {
+            color: #003399;
+        }
+
+        .account-type-card .name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #0a1628;
+        }
+
+        .account-type-card .desc {
+            font-size: 11px;
+            color: #6b7a8f;
+            margin-top: 2px;
+        }
+
+        .account-type-card .badge {
+            font-size: 9px;
+            font-weight: 600;
+            padding: 1px 10px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-top: 4px;
+            background: #e8f0fe;
+            color: #003399;
+        }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
+
+    .alert-danger {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+
+    .alert-info {
+        background: #e8f0fe;
+        color: #003399;
+        border: 1px solid #c5d5f0;
+    }
+
+    .text-danger {
+        color: #dc2626;
+        font-size: 13px;
+        margin-top: 4px;
+        display: block;
+    }
+
+    @@media (max-width: 600px) {
+        .form-card {
+            padding: 20px;
+        }
+
+        .account-types-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Open New Account</h1>
+        <p>Choose an account type that suits your needs</p>
+    </div>
+
+    <!-- Form -->
+    <div class="form-card">
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            </div>
+        }
+
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            Choose an account type that best suits your needs. You can have multiple accounts.
+        </div>
+
+        @using (Html.BeginForm("CreateAccount", "Banking", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <!-- Account Type - Visual Grid -->
+            <div class="form-group">
+                <label>Account Type</label>
+                <div class="account-types-grid" id="accountTypeGrid">
+                    <div class="account-type-card" data-value="Cheque" onclick="selectAccountType('Cheque')">
+                        <i class="fas fa-wallet"></i>
+                        <div class="name">Cheque</div>
+                        <div class="desc">Everyday spending</div>
+                        <span class="badge">Popular</span>
+                    </div>
+                    <div class="account-type-card" data-value="Savings" onclick="selectAccountType('Savings')">
+                        <i class="fas fa-piggy-bank"></i>
+                        <div class="name">Savings</div>
+                        <div class="desc">Save for goals</div>
+                        <span class="badge">Best for saving</span>
+                    </div>
+                    <div class="account-type-card" data-value="Student" onclick="selectAccountType('Student')">
+                        <i class="fas fa-graduation-cap"></i>
+                        <div class="name">Student</div>
+                        <div class="desc">Special benefits</div>
+                        <span class="badge">No fees</span>
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.AccountType, new { id = "AccountTypeHidden" })
+                @Html.ValidationMessageFor(m => m.AccountType, "", new { @class = "text-danger" })
+                <div class="hint" id="accountTypeHint">Select an account type above</div>
+            </div>
+
+            <!-- Account Name -->
+            <div class="form-group">
+                @Html.LabelFor(m => m.AccountName, "Account Name")
+                @Html.TextBoxFor(m => m.AccountName, new { @class = "form-control", placeholder = "e.g., My Main Account" })
+                @Html.ValidationMessageFor(m => m.AccountName, "", new { @class = "text-danger" })
+                <div class="hint">Give your account a name to easily identify it</div>
+            </div>
+
+            <!-- Initial Deposit -->
+            <div class="form-group">
+                @Html.LabelFor(m => m.InitialDeposit, "Initial Deposit")
+                <div class="amount-input">
+                    <span class="currency">R</span>
+                    @Html.TextBoxFor(m => m.InitialDeposit, new { @class = "form-control", placeholder = "0.00", type = "number", step = "0.01", min = "0" })
+                </div>
+                @Html.ValidationMessageFor(m => m.InitialDeposit, "", new { @class = "text-danger" })
+                <div class="hint">Optional - amount to deposit when opening the account</div>
+                <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setAmount(0)">R0</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setAmount(100)">R100</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setAmount(500)">R500</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setAmount(1000)">R1,000</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setAmount(5000)">R5,000</button>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-plus-circle me-2"></i>Open Account
+            </button>
+        }
+
+    </div>
+
+</div>
+
+<script>
+    // ===== ACCOUNT TYPE SELECTION =====
+    var accountTypeCards = document.querySelectorAll('.account-type-card');
+    var accountTypeHidden = document.getElementById('AccountTypeHidden');
+    var accountTypeHint = document.getElementById('accountTypeHint');
+
+    var accountTypeMessages = {
+        'Cheque': 'Everyday spending, debit orders, and ATM withdrawals',
+        'Savings': 'Earn interest, save for goals, limited withdrawals',
+        'Student': 'Special benefits for students, no monthly fees'
+    };
+
+    function selectAccountType(value) {
+        // Update hidden field
+        accountTypeHidden.value = value;
+
+        // Update UI
+        accountTypeCards.forEach(function(el) {
+            el.classList.toggle('selected', el.dataset.value === value);
+        });
+
+        // Update hint
+        accountTypeHint.textContent = accountTypeMessages[value] || 'Select an account type above';
+    }
+
+    // ===== SET AMOUNT =====
+    function setAmount(amount) {
+        document.getElementById('InitialDeposit').value = amount;
+    }
+
+    // ===== VALIDATION =====
+    document.querySelector('form').addEventListener('submit', function(e) {
+        var accountType = accountTypeHidden.value;
+        if (!accountType) {
+            e.preventDefault();
+            alert('Please select an account type');
+            return false;
+        }
+    });
+</script>

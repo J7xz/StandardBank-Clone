@@ -1,0 +1,576 @@
+﻿@model StandardBank.ViewModels.TransferViewModel
+
+@{
+    ViewBag.Title = "Send Money";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .transfer-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 28px 32px;
+        max-width: 640px;
+        margin: 0 auto;
+    }
+
+        .transfer-card .form-group {
+            margin-bottom: 18px;
+        }
+
+            .transfer-card .form-group label {
+                font-size: 13px;
+                font-weight: 600;
+                color: #0a1628;
+                display: block;
+                margin-bottom: 4px;
+            }
+
+            .transfer-card .form-group .form-control,
+            .transfer-card .form-group .form-select {
+                width: 100%;
+                padding: 10px 14px;
+                border: 1px solid #eaedf2;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: 'Inter', sans-serif;
+                transition: 0.2s;
+                background: #fff;
+                color: #0a1628;
+                appearance: auto;
+            }
+
+                .transfer-card .form-group .form-control:focus,
+                .transfer-card .form-group .form-select:focus {
+                    border-color: #003399;
+                    outline: none;
+                    box-shadow: 0 0 0 3px rgba(0,51,153,0.06);
+                }
+
+                .transfer-card .form-group .form-control::placeholder {
+                    color: #9aa3b3;
+                }
+
+            .transfer-card .form-group .hint {
+                font-size: 12px;
+                color: #6b7a8f;
+                margin-top: 4px;
+            }
+
+        .transfer-card .amount-input {
+            position: relative;
+        }
+
+            .transfer-card .amount-input .currency {
+                position: absolute;
+                left: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-weight: 600;
+                color: #6b7a8f;
+                font-size: 15px;
+            }
+
+            .transfer-card .amount-input input {
+                padding-left: 32px;
+            }
+
+        .transfer-card .quick-amounts {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+            .transfer-card .quick-amounts button {
+                padding: 4px 16px;
+                border: 1px solid #eaedf2;
+                border-radius: 6px;
+                background: #fff;
+                font-size: 13px;
+                font-weight: 500;
+                color: #0a1628;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+                .transfer-card .quick-amounts button:hover {
+                    border-color: #003399;
+                    background: #f5f7fa;
+                }
+
+        .transfer-card .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #003399;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 4px;
+        }
+
+            .transfer-card .submit-btn:hover {
+                background: #002266;
+            }
+
+            .transfer-card .submit-btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+    .transfer-type-tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 20px;
+        background: #f0f2f7;
+        border-radius: 10px;
+        padding: 4px;
+    }
+
+        .transfer-type-tabs button {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7a8f;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+            .transfer-type-tabs button.active {
+                background: #fff;
+                color: #003399;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            }
+
+            .transfer-type-tabs button:hover:not(.active) {
+                color: #0a1628;
+            }
+
+    .transfer-section {
+        display: block;
+    }
+
+        .transfer-section.hidden {
+            display: none;
+        }
+
+    .beneficiary-section {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #f0f2f7;
+    }
+
+        .beneficiary-section .beneficiary-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #6b7a8f;
+            margin-bottom: 8px;
+        }
+
+        .beneficiary-section .beneficiary-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+            .beneficiary-section .beneficiary-list button {
+                padding: 4px 16px;
+                border: 1px solid #eaedf2;
+                border-radius: 20px;
+                background: #fff;
+                font-size: 13px;
+                color: #0a1628;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+                .beneficiary-section .beneficiary-list button:hover {
+                    border-color: #003399;
+                    background: #f5f7fa;
+                }
+
+    .external-fields {
+        background: #f8fafc;
+        padding: 16px;
+        border-radius: 10px;
+        margin-bottom: 16px;
+    }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
+
+    .alert-danger {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+
+    .alert-success {
+        background: #ecfdf5;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+
+    .text-danger {
+        color: #dc2626;
+        font-size: 13px;
+        margin-top: 4px;
+        display: block;
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #f0f2f7;
+    }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #003399;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 13px;
+            color: #0a1628;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .checkbox-group .hint {
+            font-size: 12px;
+            color: #6b7a8f;
+            margin-left: 4px;
+        }
+
+    /* Add beneficiary form - initially hidden */
+    .add-beneficiary-form {
+        display: none;
+        margin-top: 12px;
+        padding: 16px;
+        background: #f8fafc;
+        border-radius: 10px;
+        border: 1px solid #eaedf2;
+    }
+
+        .add-beneficiary-form.show {
+            display: block;
+        }
+
+        .add-beneficiary-form .form-group {
+            margin-bottom: 12px;
+        }
+
+            .add-beneficiary-form .form-group:last-child {
+                margin-bottom: 0;
+            }
+
+    @@media (max-width: 600px) {
+        .transfer-card {
+            padding: 20px;
+        }
+
+            .transfer-card .quick-amounts button {
+                flex: 1;
+                min-width: 60px;
+                text-align: center;
+            }
+
+        .transfer-type-tabs button {
+            font-size: 12px;
+            padding: 8px 12px;
+        }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Send Money</h1>
+        <p>Transfer funds between your accounts or to external beneficiaries</p>
+    </div>
+
+    <!-- Transfer Form -->
+    <div class="transfer-card">
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            </div>
+        }
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            </div>
+        }
+
+        <!-- Transfer Type Tabs -->
+        <div class="transfer-type-tabs">
+            <button class="active" id="internalTab" onclick="switchTransferType('internal')">
+                <i class="fas fa-exchange-alt me-2"></i>Internal Transfer
+            </button>
+            <button id="externalTab" onclick="switchTransferType('external')">
+                <i class="fas fa-university me-2"></i>External Transfer
+            </button>
+        </div>
+
+        @using (Html.BeginForm("Transfer", "Banking", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.TransferType, new { id = "TransferType" })
+
+            <!-- INTERNAL TRANSFER -->
+            <div id="internalSection" class="transfer-section">
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FromAccountId, "From Account")
+                    @Html.DropDownListFor(m => m.FromAccountId,
+                        new SelectList(Model.UserAccounts, "Id", "AccountNumber"),
+                        "-- Select Account --",
+                        new { @class = "form-select" })
+                    @Html.ValidationMessageFor(m => m.FromAccountId, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.ToAccountId, "To Account")
+                    @Html.DropDownListFor(m => m.ToAccountId,
+                        new SelectList(Model.UserAccounts, "Id", "AccountNumber"),
+                        "-- Select Account --",
+                        new { @class = "form-select" })
+                    @Html.ValidationMessageFor(m => m.ToAccountId, "", new { @class = "text-danger" })
+                    <div class="hint">Transfer money between your own accounts</div>
+                </div>
+
+            </div>
+
+            <!-- EXTERNAL TRANSFER -->
+            <div id="externalSection" class="transfer-section hidden">
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FromAccountId, "From Account")
+                    @Html.DropDownListFor(m => m.FromAccountId,
+                        new SelectList(Model.UserAccounts, "Id", "AccountNumber"),
+                        "-- Select Account --",
+                        new { @class = "form-select" })
+                    @Html.ValidationMessageFor(m => m.FromAccountId, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="external-fields">
+
+                    <!-- Beneficiary Dropdown + Manual Entry Toggle -->
+                    <div class="form-group">
+                        <label>Select Beneficiary (Optional)</label>
+                        <select class="form-select" id="beneficiarySelect" onchange="fillBeneficiaryFields()">
+                            <option value="">-- Select Beneficiary --</option>
+                            @if (Model.Beneficiaries != null && Model.Beneficiaries.Any())
+                            {
+                                foreach (var ben in Model.Beneficiaries)
+                                {
+                                    <option value="@ben.Id"
+                                            data-name="@ben.Name"
+                                            data-account="@ben.AccountNumber"
+                                            data-bank="@ben.BankName"
+                                            data-nickname="@ben.Nickname">
+                                        @(string.IsNullOrEmpty(ben.Nickname) ? ben.Name : ben.Nickname) - @ben.AccountNumber
+                                    </option>
+                                }
+                            }
+                        </select>
+                        <div class="hint" style="margin-top:6px;">
+                            <a href="#" onclick="toggleManualEntry(); return false;" style="color:#003399;text-decoration:none;">
+                                <i class="fas fa-user-plus"></i> Enter recipient manually
+                            </a>
+                            &nbsp;|&nbsp;
+                            <a href="@Url.Action("Create", "Beneficiary")" style="color:#003399;text-decoration:none;">
+                                <i class="fas fa-plus-circle"></i> Add new beneficiary
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Manual Entry Fields -->
+                    <div id="manualEntryFields">
+                        <div class="form-group">
+                            <label>Recipient Name <span class="text-danger">*</span></label>
+                            @Html.TextBoxFor(m => m.RecipientName, new { @class = "form-control", placeholder = "Enter recipient full name" })
+                            @Html.ValidationMessageFor(m => m.RecipientName, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label>Account Number <span class="text-danger">*</span></label>
+                            @Html.TextBoxFor(m => m.RecipientAccount, new { @class = "form-control", placeholder = "Enter account number" })
+                            @Html.ValidationMessageFor(m => m.RecipientAccount, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label>Bank <span class="text-danger">*</span></label>
+                            @Html.DropDownListFor(m => m.RecipientBank,
+                                new SelectList(new List<string> { "", "ABSA", "Capitec", "FNB", "Nedbank", "Standard Bank", "TymeBank", "Discovery Bank", "Other" }),
+                                new { @class = "form-select" })
+                            @Html.ValidationMessageFor(m => m.RecipientBank, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            <label>Reference</label>
+                            @Html.TextBoxFor(m => m.ExternalReference, new { @class = "form-control", placeholder = "Reference for recipient" })
+                        </div>
+                    </div>
+
+                    <!-- Add to Beneficiaries Checkbox -->
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="addToBeneficiaries" name="addToBeneficiaries" value="true" />
+                        <label for="addToBeneficiaries">
+                            Save as beneficiary
+                            <span class="hint">(for future transfers)</span>
+                        </label>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- AMOUNT (Shared) -->
+            <div class="form-group">
+                @Html.LabelFor(m => m.Amount, "Amount")
+                <div class="amount-input">
+                    <span class="currency">R</span>
+                    @Html.TextBoxFor(m => m.Amount, new { @class = "form-control", placeholder = "0.00", type = "number", step = "0.01", min = "0.01" })
+                </div>
+                @Html.ValidationMessageFor(m => m.Amount, "", new { @class = "text-danger" })
+                <div class="quick-amounts">
+                    <button type="button" onclick="setAmount(50)">R50</button>
+                    <button type="button" onclick="setAmount(100)">R100</button>
+                    <button type="button" onclick="setAmount(500)">R500</button>
+                    <button type="button" onclick="setAmount(1000)">R1,000</button>
+                    <button type="button" onclick="setAmount(5000)">R5,000</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Description, "Description")
+                @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = "2", placeholder = "Description (optional)" })
+                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-paper-plane me-2"></i>Send Money
+            </button>
+        }
+
+    </div>
+
+</div>
+
+<script>
+    var currentTransferType = 'internal';
+
+    function switchTransferType(type) {
+        currentTransferType = type;
+        document.getElementById('TransferType').value = type;
+
+        // Update tabs
+        document.getElementById('internalTab').classList.toggle('active', type === 'internal');
+        document.getElementById('externalTab').classList.toggle('active', type === 'external');
+
+        // Update sections
+        document.getElementById('internalSection').classList.toggle('hidden', type !== 'internal');
+        document.getElementById('externalSection').classList.toggle('hidden', type !== 'external');
+    }
+
+    function setAmount(amount) {
+        document.getElementById('Amount').value = amount;
+    }
+
+    function fillBeneficiaryFields() {
+        var select = document.getElementById('beneficiarySelect');
+        var selected = select.options[select.selectedIndex];
+        if (selected && selected.value) {
+            document.getElementById('RecipientName').value = selected.getAttribute('data-name') || '';
+            document.getElementById('RecipientAccount').value = selected.getAttribute('data-account') || '';
+            document.getElementById('RecipientBank').value = selected.getAttribute('data-bank') || '';
+            document.getElementById('ExternalReference').value = '';
+            // Uncheck add to beneficiaries since it's already saved
+            document.getElementById('addToBeneficiaries').checked = false;
+        } else {
+            // Clear fields if "Select Beneficiary" is chosen
+            document.getElementById('RecipientName').value = '';
+            document.getElementById('RecipientAccount').value = '';
+            document.getElementById('RecipientBank').value = '';
+        }
+    }
+
+    function toggleManualEntry() {
+        var beneficiarySelect = document.getElementById('beneficiarySelect');
+        // Clear selection
+        beneficiarySelect.value = '';
+        // Clear fields
+        document.getElementById('RecipientName').value = '';
+        document.getElementById('RecipientAccount').value = '';
+        document.getElementById('RecipientBank').value = '';
+        // Focus on first field
+        document.getElementById('RecipientName').focus();
+        // Uncheck add to beneficiaries
+        document.getElementById('addToBeneficiaries').checked = false;
+    }
+
+    // When manually entering, show the add to beneficiaries checkbox
+    document.addEventListener('DOMContentLoaded', function () {
+        var nameField = document.getElementById('RecipientName');
+        var accountField = document.getElementById('RecipientAccount');
+        var bankField = document.getElementById('RecipientBank');
+
+        function checkManualEntry() {
+            var hasManualData = nameField.value.trim() !== '' ||
+                accountField.value.trim() !== '' ||
+                bankField.value !== '';
+            var checkbox = document.getElementById('addToBeneficiaries');
+            checkbox.disabled = !hasManualData;
+            if (!hasManualData) {
+                checkbox.checked = false;
+            }
+        }
+
+        nameField.addEventListener('input', checkManualEntry);
+        accountField.addEventListener('input', checkManualEntry);
+        bankField.addEventListener('change', checkManualEntry);
+    });
+</script>

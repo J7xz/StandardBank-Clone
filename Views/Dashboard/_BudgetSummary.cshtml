@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "_BudgetSummary";
+}
+
+<h2>_BudgetSummary</h2>
+
+@model IEnumerable<StandardBank.Models.Budget>
+
+<div class="card card-elegant">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-chart-pie me-2"></i>Budget Summary</span>
+        <a href="@Url.Action("Index", "Budget")" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="card-body">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var budget in Model.Take(3))
+            {
+                var percentage = budget.SpentPercentage;
+                var statusClass = percentage > 100 ? "bg-danger" : percentage >= 80 ? "bg-warning" : "bg-success";
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between small">
+                        <span class="fw-semibold">@budget.Category</span>
+                        <span>@budget.SpentAmount.ToString("C") / @budget.AllocatedAmount.ToString("C")</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar @statusClass"
+                             role="progressbar"
+                             style="width: @(percentage > 100 ? 100 : percentage)%;"
+                             aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                    <small class="text-muted">@percentage.ToString("F0")% used</small>
+                </div>
+            }
+            if (Model.Count() > 3)
+            {
+                <small class="text-muted">+ @(Model.Count() - 3) more budgets</small>
+            }
+        }
+        else
+        {
+            <p class="text-muted text-center py-3">No budgets set.</p>
+        }
+    </div>
+</div>

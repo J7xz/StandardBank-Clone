@@ -1,0 +1,316 @@
+﻿@model StandardBank.Controllers.WithdrawFundsViewModel
+
+@{
+    ViewBag.Title = "Withdraw Funds";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .form-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 28px 32px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+        .form-card .form-group {
+            margin-bottom: 18px;
+        }
+
+            .form-card .form-group label {
+                font-size: 13px;
+                font-weight: 600;
+                color: #0a1628;
+                display: block;
+                margin-bottom: 4px;
+            }
+
+            .form-card .form-group .form-control,
+            .form-card .form-group .form-select {
+                width: 100%;
+                padding: 10px 14px;
+                border: 1px solid #eaedf2;
+                border-radius: 8px;
+                font-size: 14px;
+                font-family: 'Inter', sans-serif;
+                transition: 0.2s;
+                background: #fff;
+                color: #0a1628;
+                appearance: auto;
+            }
+
+                .form-card .form-group .form-control:focus,
+                .form-card .form-group .form-select:focus {
+                    border-color: #003399;
+                    outline: none;
+                    box-shadow: 0 0 0 3px rgba(0,51,153,0.06);
+                }
+
+            .form-card .form-group .hint {
+                font-size: 12px;
+                color: #6b7a8f;
+                margin-top: 4px;
+            }
+
+        .form-card .amount-input {
+            position: relative;
+        }
+
+            .form-card .amount-input .currency {
+                position: absolute;
+                left: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-weight: 600;
+                color: #6b7a8f;
+                font-size: 15px;
+            }
+
+            .form-card .amount-input input {
+                padding-left: 32px;
+            }
+
+        .form-card .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #eab308;
+            color: #0a1628;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 4px;
+        }
+
+            .form-card .submit-btn:hover {
+                background: #ca8a04;
+            }
+
+    .progress-section {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin-bottom: 20px;
+    }
+
+        .progress-section .labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+            .progress-section .labels .current {
+                font-weight: 600;
+                color: #0a1628;
+            }
+
+            .progress-section .labels .target {
+                color: #6b7a8f;
+            }
+
+        .progress-section .bar {
+            width: 100%;
+            height: 8px;
+            background: #eef2f6;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+            .progress-section .bar .fill {
+                height: 100%;
+                border-radius: 6px;
+                background: #003399;
+                transition: width 0.4s;
+            }
+
+        .progress-section .bottom {
+            font-size: 12px;
+            color: #6b7a8f;
+            margin-top: 4px;
+        }
+
+    .quick-amounts {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+    }
+
+        .quick-amounts button {
+            padding: 4px 16px;
+            border: 1px solid #eaedf2;
+            border-radius: 6px;
+            background: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            color: #0a1628;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+            .quick-amounts button:hover {
+                border-color: #003399;
+                background: #f5f7fa;
+            }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+    }
+
+    .alert-danger {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+
+    .text-danger {
+        color: #dc2626;
+        font-size: 13px;
+        margin-top: 4px;
+        display: block;
+    }
+
+    .btn-secondary {
+        padding: 10px 24px;
+        background: #f0f2f7;
+        color: #0a1628;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-secondary:hover {
+            background: #e5e8ef;
+        }
+
+    .max-amount {
+        font-size: 13px;
+        color: #6b7a8f;
+        margin-top: 4px;
+    }
+
+    @@media (max-width: 600px) {
+        .form-card {
+            padding: 20px;
+        }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Withdraw Funds</h1>
+        <p>Withdraw money from "@Model.GoalName"</p>
+    </div>
+
+    <!-- Form -->
+    <div class="form-card">
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            </div>
+        }
+
+        <!-- Progress -->
+        <div class="progress-section">
+            <div class="labels">
+                <span class="current">Current: @Model.CurrentAmount.ToString("C")</span>
+                <span class="target">Target: @Model.TargetAmount.ToString("C")</span>
+            </div>
+            <div class="bar">
+                <div class="fill" style="width:@(Model.CurrentAmount / Model.TargetAmount * 100 > 100 ? 100 : Model.CurrentAmount / Model.TargetAmount * 100)%;"></div>
+            </div>
+            <div class="bottom">@((Model.CurrentAmount / Model.TargetAmount * 100).ToString("F0"))% complete</div>
+        </div>
+
+        @using (Html.BeginForm("WithdrawFunds", "Savings", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(m => m.GoalId)
+            @Html.HiddenFor(m => m.GoalName)
+            @Html.HiddenFor(m => m.MaxAmount)
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.AccountId, "Deposit To Account")
+                @Html.DropDownListFor(m => m.AccountId,
+                    new SelectList(Model.Accounts, "Id", "AccountNumber"),
+                    "-- Select Account --",
+                    new { @class = "form-select" })
+                @Html.ValidationMessageFor(m => m.AccountId, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Amount, "Amount")
+                <div class="amount-input">
+                    <span class="currency">R</span>
+                    @Html.TextBoxFor(m => m.Amount, new { @class = "form-control", placeholder = "0.00", type = "number", step = "0.01", max = Model.MaxAmount })
+                </div>
+                @Html.ValidationMessageFor(m => m.Amount, "", new { @class = "text-danger" })
+                <div class="max-amount">Maximum: @Model.MaxAmount.ToString("C")</div>
+                <div class="quick-amounts">
+                    <button type="button" onclick="setAmount(@(Model.MaxAmount * 0.25m))">25%</button>
+                    <button type="button" onclick="setAmount(@(Model.MaxAmount * 0.5m))">50%</button>
+                    <button type="button" onclick="setAmount(@(Model.MaxAmount * 0.75m))">75%</button>
+                    <button type="button" onclick="setAmount(@Model.MaxAmount)">100%</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Description, "Description")
+                @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = "2", placeholder = "Description (optional)" })
+            </div>
+
+            <div style="display:flex; gap:12px;">
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-minus me-2"></i>Withdraw Funds
+                </button>
+                <a href="@Url.Action("Index", "Savings")" class="btn-secondary">Cancel</a>
+            </div>
+        }
+
+    </div>
+
+</div>
+
+<script>
+    function setAmount(amount) {
+        var maxAmount = @Model.MaxAmount;
+        var actualAmount = Math.min(amount, maxAmount);
+        document.getElementById('Amount').value = actualAmount.toFixed(2);
+    }
+</script>

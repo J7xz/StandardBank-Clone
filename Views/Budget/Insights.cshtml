@@ -1,0 +1,276 @@
+﻿@{
+    ViewBag.Title = "Budget Insights";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var monthName = new DateTime(ViewBag.Year, ViewBag.Month, 1).ToString("MMMM yyyy");
+}
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    .insight-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 20px 24px;
+        transition: 0.2s;
+    }
+
+        .insight-card:hover {
+            border-color: #003399;
+            box-shadow: 0 4px 20px rgba(0,51,153,0.06);
+        }
+
+        .insight-card .icon-wrap {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+            .insight-card .icon-wrap.blue {
+                background: #e8f0fe;
+                color: #003399;
+            }
+
+            .insight-card .icon-wrap.gold {
+                background: #f5e6b8;
+                color: #c9a84c;
+            }
+
+            .insight-card .icon-wrap.green {
+                background: #ecfdf5;
+                color: #16a34a;
+            }
+
+            .insight-card .icon-wrap.red {
+                background: #fef2f2;
+                color: #dc2626;
+            }
+
+        .insight-card .title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0a1628;
+            margin-bottom: 2px;
+        }
+
+        .insight-card .message {
+            font-size: 14px;
+            color: #6b7a8f;
+            margin: 0;
+        }
+
+    .alert-item {
+        padding: 12px 20px;
+        border-bottom: 1px solid #f5f7fa;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+        .alert-item:last-child {
+            border-bottom: none;
+        }
+
+        .alert-item.danger {
+            background: #fef2f2;
+        }
+
+        .alert-item.warning {
+            background: #fefce8;
+        }
+
+        .alert-item.success {
+            background: #ecfdf5;
+        }
+
+        .alert-item .text {
+            font-size: 14px;
+        }
+
+            .alert-item .text strong {
+                color: #0a1628;
+            }
+
+        .alert-item .pct {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 20px;
+        }
+
+            .alert-item .pct.danger {
+                background: #fee2e2;
+                color: #dc2626;
+            }
+
+            .alert-item .pct.warning {
+                background: #fef3c7;
+                color: #eab308;
+            }
+
+            .alert-item .pct.success {
+                background: #dcfce7;
+                color: #16a34a;
+            }
+
+    .btn-secondary {
+        padding: 8px 18px;
+        background: #f0f2f7;
+        color: #0a1628;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-secondary:hover {
+            background: #e5e8ef;
+        }
+
+    .empty-state {
+        padding: 48px 20px;
+        text-align: center;
+        color: #6b7a8f;
+    }
+
+        .empty-state i {
+            font-size: 40px;
+            opacity: 0.15;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .empty-state .main {
+            font-size: 16px;
+            font-weight: 500;
+            color: #0a1628;
+        }
+
+        .empty-state .sub {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+    .insights-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    @@media (max-width: 768px) {
+        .insights-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .alert-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1>Budget Insights</h1>
+            <p>AI-powered analysis of your spending for @monthName</p>
+        </div>
+        <a href="@Url.Action("Index", "Budget", new { month = ViewBag.Month, year = ViewBag.Year })" class="btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Budget
+        </a>
+    </div>
+
+    <!-- AI Insights -->
+    @if (ViewBag.AIInsights != null && ((IEnumerable<dynamic>)ViewBag.AIInsights).Any())
+    {
+        <div class="insights-grid">
+            @foreach (var insight in ViewBag.AIInsights)
+            {
+                var iconClass = insight.Type == "Spending" ? "blue" : insight.Type == "Trend" ? "gold" : insight.Type == "Pattern" ? "green" : "red";
+                <div class="insight-card">
+                    <div style="display:flex; align-items:flex-start; gap:14px;">
+                        <div class="icon-wrap @iconClass">
+                            <i class="fas @insight.Icon fa-lg"></i>
+                        </div>
+                        <div>
+                            <div class="title">@insight.Type</div>
+                            <p class="message">@insight.Message</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state" style="background:#fff; border-radius:14px; border:1px solid #eaedf2;">
+            <i class="fas fa-brain"></i>
+            <div class="main">No Insights Yet</div>
+            <div class="sub">Create budgets and start tracking your spending to get AI-powered insights</div>
+        </div>
+    }
+
+    <!-- Budget Alerts -->
+    @if (ViewBag.Insights != null && ((IEnumerable<dynamic>)ViewBag.Insights).Any())
+    {
+        <div style="background:#fff; border-radius:14px; border:1px solid #eaedf2; overflow:hidden;">
+            <div style="padding:14px 20px; border-bottom:1px solid #eaedf2; background:#fafbfc; font-weight:600; font-size:14px; color:#0a1628;">
+                <i class="fas fa-bell me-2" style="color:#003399;"></i>Budget Alerts
+            </div>
+            <div>
+                @foreach (var insight in ViewBag.Insights)
+                {
+                    var severityClass = insight.Severity == "danger" ? "danger" : insight.Severity == "warning" ? "warning" : "success";
+                    <div class="alert-item @severityClass">
+                        <span class="text">
+                            <strong>@insight.Category</strong>
+                            <span style="color:#6b7a8f; margin:0 6px;">|</span>
+                            @insight.Message
+                        </span>
+                        <span class="pct @severityClass">@insight.Percentage.ToString("F0")%</span>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+</div>

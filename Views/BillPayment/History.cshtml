@@ -1,0 +1,109 @@
+﻿@model IEnumerable<StandardBank.Models.BillPayment>
+
+@{
+    ViewBag.Title = "Payment History";
+    ViewBag.SubTitle = "View all your bill payments";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="animate-fade-in">
+    <!-- Filters -->
+    <div class="card card-elegant mb-4">
+        <div class="card-body">
+            @using (Html.BeginForm("History", "BillPayment", FormMethod.Get))
+            {
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Bill Type</label>
+                        <select name="billType" class="form-select">
+                            <option value="All" @(ViewBag.SelectedBillType == "All" ? "selected" : "")>All</option>
+                            <option value="Electricity" @(ViewBag.SelectedBillType == "Electricity" ? "selected" : "")>Electricity</option>
+                            <option value="Water" @(ViewBag.SelectedBillType == "Water" ? "selected" : "")>Water</option>
+                            <option value="DSTV" @(ViewBag.SelectedBillType == "DSTV" ? "selected" : "")>DSTV</option>
+                            <option value="Internet" @(ViewBag.SelectedBillType == "Internet" ? "selected" : "")>Internet</option>
+                            <option value="Municipality" @(ViewBag.SelectedBillType == "Municipality" ? "selected" : "")>Municipality</option>
+                            <option value="Education" @(ViewBag.SelectedBillType == "Education" ? "selected" : "")>Education</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">From Date</label>
+                        <input type="date" name="fromDate" class="form-control" value="@(ViewBag.FromDate?.ToString("yyyy-MM-dd"))" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">To Date</label>
+                        <input type="date" name="toDate" class="form-control" value="@(ViewBag.ToDate?.ToString("yyyy-MM-dd"))" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Search</label>
+                        <input type="text" name="searchTerm" class="form-control" placeholder="Reference, description..." value="@ViewBag.SearchTerm" />
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-2"></i>Filter
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Payments Table -->
+    <div class="card card-elegant">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Bill Type</th>
+                            <th>Account</th>
+                            <th>Reference</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var payment in Model)
+                            {
+                                <tr>
+                                    <td><small>@payment.PaymentDate.ToString("dd MMM yyyy HH:mm")</small></td>
+                                    <td>
+                                        <span class="badge bg-secondary">
+                                            <i class="fas @(payment.BillType == "Electricity" ? "fa-bolt" :
+                                                        payment.BillType == "Water" ? "fa-tint" :
+                                                        payment.BillType == "DSTV" ? "fa-tv" :
+                                                        payment.BillType == "Internet" ? "fa-wifi" : "fa-file-invoice") me-1"></i>
+                                            @payment.BillType
+                                        </span>
+                                    </td>
+                                    <td><small>@payment.Account?.AccountNumber</small></td>
+                                    <td><small>@payment.ReferenceNumber</small></td>
+                                    <td><small>@payment.Description</small></td>
+                                    <td class="fw-bold text-danger">@payment.Amount.ToString("C")</td>
+                                    <td>
+                                        <span class="badge bg-@(payment.Status == "Completed" ? "success" : payment.Status == "Pending" ? "warning" : "danger")">
+                                            @payment.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("Details", "BillPayment", new { id = payment.Id })" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="8" class="text-center text-muted py-4">No payments found</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

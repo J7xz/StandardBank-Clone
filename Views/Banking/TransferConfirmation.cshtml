@@ -1,0 +1,73 @@
+﻿@model StandardBank.ViewModels.TransferConfirmationViewModel
+
+@{
+    ViewBag.Title = "Transfer Confirmation";
+    ViewBag.SubTitle = "Payment successful";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center animate-fade-in">
+    <div class="col-lg-6">
+        <div class="card card-elegant text-center p-4">
+            <div class="card-body">
+                <div class="success-icon mb-4">
+                    <div class="rounded-circle bg-success bg-opacity-10 p-4 d-inline-block">
+                        <i class="fas fa-check-circle text-success" style="font-size: 48px;"></i>
+                    </div>
+                </div>
+                <h4 class="fw-bold mb-2">Transfer Complete!</h4>
+                <p class="text-muted">Your money has been sent successfully.</p>
+
+                <hr />
+
+                <div class="text-start">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <small class="text-muted">From Account</small>
+                            <p class="fw-semibold mb-0">@Model.FromAccountNumber</p>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">To Account</small>
+                            <p class="fw-semibold mb-0">@Model.ToAccountNumber</p>
+                        </div>
+                        <div class="col-12">
+                            <small class="text-muted">Recipient</small>
+                            <p class="fw-semibold mb-0">@Model.ToAccountName</p>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Amount</small>
+                            <p class="fw-bold text-success mb-0">@Model.Amount.ToString("C")</p>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Reference</small>
+                            <p class="fw-semibold mb-0">@Model.Reference</p>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Transaction Reference</small>
+                            <p class="fw-semibold mb-0">@Model.TransactionReference</p>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Date</small>
+                            <p class="fw-semibold mb-0">@Model.TransactionDate</p>
+                        </div>
+                        <div class="col-12">
+                            <small class="text-muted">New Balance</small>
+                            <p class="fw-bold fs-5 mb-0 text-primary">@Model.NewBalance.ToString("C")</p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="d-flex gap-2">
+                    <a href="@Url.Action("Index", "Banking")" class="btn btn-outline-primary flex-grow-1">
+                        <i class="fas fa-wallet me-2"></i>My Accounts
+                    </a>
+                    <a href="@Url.Action("Transfer", "Banking")" class="btn btn-primary flex-grow-1">
+                        <i class="fas fa-exchange-alt me-2"></i>New Transfer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

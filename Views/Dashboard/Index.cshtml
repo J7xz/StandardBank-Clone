@@ -1,0 +1,704 @@
+﻿@model StandardBank.ViewModels.DashboardViewModel
+
+@{
+    ViewBag.Title = "Dashboard";
+    ViewBag.SubTitle = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .hero-stats {
+        background: linear-gradient(135deg, #001a4d 0%, #003399 60%, #1a4cb3 100%);
+        border-radius: 20px;
+        padding: 28px 32px;
+        margin-bottom: 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+        .hero-stats .greeting h2 {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .hero-stats .greeting p {
+            color: rgba(255,255,255,0.4);
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+        .hero-stats .balance-section {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+            .hero-stats .balance-section .amount {
+                color: #ffd54f;
+                font-size: 28px;
+                font-weight: 700;
+            }
+
+                .hero-stats .balance-section .amount.hidden {
+                    font-size: 28px;
+                    font-weight: 700;
+                    color: #ffd54f;
+                    letter-spacing: 4px;
+                }
+
+            .hero-stats .balance-section .toggle-btn {
+                background: rgba(255,255,255,0.08);
+                border: none;
+                color: rgba(255,255,255,0.5);
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                transition: 0.2s;
+            }
+
+                .hero-stats .balance-section .toggle-btn:hover {
+                    background: rgba(255,255,255,0.15);
+                    color: #fff;
+                }
+
+    .quick-strip {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 28px;
+        background: #fff;
+        border-radius: 14px;
+        padding: 10px 14px;
+        border: 1px solid #eaedf2;
+        flex-wrap: wrap;
+    }
+
+        .quick-strip a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #0a1628;
+            font-weight: 500;
+            font-size: 14px;
+            transition: 0.2s;
+            flex: 1;
+            justify-content: center;
+            min-width: 100px;
+        }
+
+            .quick-strip a:hover {
+                background: #f0f2f7;
+            }
+
+            .quick-strip a i {
+                font-size: 15px;
+                color: #003399;
+            }
+
+            .quick-strip a .gold i {
+                color: #c9a84c;
+            }
+
+            .quick-strip a .green i {
+                color: #16a34a;
+            }
+
+            .quick-strip a .purple i {
+                color: #7c3aed;
+            }
+
+    .card-sb {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        overflow: hidden;
+    }
+
+        .card-sb .head {
+            padding: 14px 20px;
+            border-bottom: 1px solid #eaedf2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fafbfc;
+        }
+
+            .card-sb .head .title {
+                font-size: 14px;
+                font-weight: 600;
+                color: #0a1628;
+            }
+
+                .card-sb .head .title i {
+                    color: #003399;
+                    margin-right: 8px;
+                }
+
+            .card-sb .head .actions {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .card-sb .head a {
+                font-size: 13px;
+                color: #003399;
+                font-weight: 500;
+                text-decoration: none;
+            }
+
+                .card-sb .head a:hover {
+                    text-decoration: underline;
+                }
+
+            .card-sb .head .add-btn {
+                font-size: 12px;
+                color: #003399;
+                font-weight: 600;
+                text-decoration: none;
+                padding: 4px 14px;
+                border: 1px solid #003399;
+                border-radius: 6px;
+                transition: 0.2s;
+            }
+
+                .card-sb .head .add-btn:hover {
+                    background: #003399;
+                    color: #fff;
+                    text-decoration: none;
+                }
+
+        .card-sb .body {
+            padding: 6px 20px 16px;
+        }
+
+    .account-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 8px;
+        border-bottom: 1px solid #f5f7fa;
+        cursor: pointer;
+        transition: 0.15s;
+        border-radius: 6px;
+        margin: 0 -8px;
+    }
+
+        .account-item:last-child {
+            border-bottom: none;
+        }
+
+        .account-item:hover {
+            background: #f5f7fa;
+        }
+
+        .account-item .name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0a1628;
+        }
+
+        .account-item .number {
+            font-size: 12px;
+            color: #6b7a8f;
+        }
+
+        .account-item .tags {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+            .account-item .tags span {
+                font-size: 10px;
+                font-weight: 600;
+                padding: 2px 10px;
+                border-radius: 4px;
+            }
+
+            .account-item .tags .type {
+                background: #e8f0fe;
+                color: #003399;
+            }
+
+            .account-item .tags .active {
+                background: #dcfce7;
+                color: #166534;
+            }
+
+            .account-item .tags .closed {
+                background: #fee2e2;
+                color: #991b1b;
+            }
+
+        .account-item .balance {
+            font-size: 17px;
+            font-weight: 700;
+            color: #0a1628;
+        }
+
+        .account-item .arrow {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin-left: 8px;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .account-item:hover .arrow {
+            opacity: 1;
+        }
+
+    .tx-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f8fafc;
+    }
+
+        .tx-item:last-child {
+            border-bottom: none;
+        }
+
+        .tx-item .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .tx-item .left .icon {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+            }
+
+                .tx-item .left .icon.in {
+                    background: #ecfdf5;
+                    color: #16a34a;
+                }
+
+                .tx-item .left .icon.out {
+                    background: #fef2f2;
+                    color: #dc2626;
+                }
+
+            .tx-item .left .desc {
+                font-size: 14px;
+                font-weight: 500;
+                color: #0a1628;
+            }
+
+            .tx-item .left .date {
+                font-size: 12px;
+                color: #6b7a8f;
+            }
+
+        .tx-item .amount {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+            .tx-item .amount.in {
+                color: #16a34a;
+            }
+
+            .tx-item .amount.out {
+                color: #dc2626;
+            }
+
+    .p-item {
+        margin-bottom: 16px;
+    }
+
+        .p-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .p-item .top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+            .p-item .top .label {
+                font-weight: 500;
+                color: #0a1628;
+            }
+
+            .p-item .top .value {
+                color: #6b7a8f;
+            }
+
+    .p-bar {
+        width: 100%;
+        height: 5px;
+        background: #eef2f6;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 4px;
+    }
+
+        .p-bar .fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.4s;
+        }
+
+    .p-item .bottom {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: #6b7a8f;
+        margin-top: 3px;
+    }
+
+    .empty-state {
+        padding: 28px 0;
+        text-align: center;
+        color: #6b7a8f;
+        font-size: 14px;
+    }
+
+        .empty-state i {
+            display: block;
+            font-size: 28px;
+            opacity: 0.15;
+            margin-bottom: 8px;
+        }
+
+        .empty-state a {
+            color: #003399;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+    .main-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.6fr;
+        gap: 24px;
+        margin-bottom: 28px;
+    }
+
+    .bottom-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    @@media (max-width: 1024px) {
+        .main-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .bottom-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .quick-strip a {
+            flex: 1 1 45%;
+        }
+
+        .hero-stats .balance-section .amount {
+            font-size: 22px;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .hero-stats {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+            .hero-stats .balance-section {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+        .quick-strip {
+            flex-direction: column;
+        }
+
+            .quick-strip a {
+                justify-content: flex-start;
+            }
+
+        .account-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
+
+            .account-item .balance {
+                align-self: flex-end;
+            }
+
+            .account-item .arrow {
+                display: none;
+            }
+
+        .card-sb .head {
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+    }
+</style>
+
+<!-- ===== HERO ===== -->
+<div class="hero-stats">
+    <div class="greeting">
+        <h2>👋 @Model.FullName</h2>
+        <p>Here's your financial snapshot</p>
+    </div>
+    <div class="balance-section">
+        <span class="amount hidden" id="balanceDisplay">••••••••</span>
+        <button class="toggle-btn" onclick="toggleBalance()" id="toggleBtn" title="Show/Hide balance">
+            <i class="fas fa-eye-slash" id="eyeIcon"></i>
+        </button>
+    </div>
+</div>
+
+<!-- ===== QUICK STRIP - DEPOSIT REMOVED ===== -->
+<div class="quick-strip">
+    <a href="@Url.Action("Transfer", "Banking")">
+        <i class="fas fa-paper-plane"></i> Send Money
+    </a>
+    <a href="@Url.Action("PayBill", "BillPayment")" class="gold">
+        <i class="fas fa-file-invoice"></i> Pay Bills
+    </a>
+    <a href="@Url.Action("CreateAccount", "Banking")" class="purple">
+        <i class="fas fa-plus-circle"></i> New Account
+    </a>
+</div>
+
+<!-- ===== MAIN GRID ===== -->
+<div class="main-grid">
+
+    <!-- ACCOUNTS -->
+    <div class="card-sb">
+        <div class="head">
+            <span class="title"><i class="fas fa-wallet"></i>Your Accounts</span>
+            @if (Model.Accounts != null && Model.Accounts.Count() > 3)
+            {
+                <a href="@Url.Action("Index", "Banking")">View All →</a>
+            }
+        </div>
+        <div class="body">
+            @if (Model.Accounts != null && Model.Accounts.Any())
+            {
+                var displayAccounts = Model.Accounts.Take(3);
+                foreach (var acc in displayAccounts)
+                {
+                    var displayName = acc.AccountType + " Account";
+                    <div class="account-item" onclick="location.href='@Url.Action("AccountDetails", "Banking", new { id = acc.Id })'">
+                        <div>
+                            <div class="name">@displayName</div>
+                            <div class="number">@acc.AccountNumber</div>
+                            <div class="tags">
+                                <span class="type">@acc.AccountType</span>
+                                <span class="@(acc.IsActive ? "active" : "closed")">@(acc.IsActive ? "Active" : "Closed")</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center;">
+                            <div class="balance">@acc.Balance.ToString("C")</div>
+                            <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-wallet"></i>
+                    No accounts yet
+                    <div style="margin-top:4px;"><a href="@Url.Action("CreateAccount", "Banking")">Open your first account</a></div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- TRANSACTIONS -->
+    <div class="card-sb">
+        <div class="head">
+            <span class="title"><i class="fas fa-clock"></i>Recent Activity</span>
+            @if (Model.RecentTransactions != null && Model.RecentTransactions.Count() > 5)
+            {
+                <a href="@Url.Action("History", "Banking")">View All →</a>
+            }
+        </div>
+        <div class="body" style="padding: 4px 20px 6px;">
+            @if (Model.RecentTransactions != null && Model.RecentTransactions.Any())
+            {
+                var displayTxs = Model.RecentTransactions.Take(5);
+                foreach (var t in displayTxs)
+                {
+                    <div class="tx-item">
+                        <div class="left">
+                            <div class="icon @(t.TransactionType == "Credit" ? "in" : "out")">
+                                <i class="fas @(t.TransactionType == "Credit" ? "fa-arrow-down" : "fa-arrow-up")"></i>
+                            </div>
+                            <div>
+                                <div class="desc">@t.Description</div>
+                                <div class="date">@t.TransactionDate.ToString("dd MMM yyyy")</div>
+                            </div>
+                        </div>
+                        <div class="amount @(t.TransactionType == "Credit" ? "in" : "out")">
+                            @(t.TransactionType == "Credit" ? "+" : "-")@t.Amount.ToString("C")
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-receipt"></i>
+                    No transactions yet
+                    <div style="margin-top:4px;">Your activity will appear here</div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- ===== BOTTOM GRID ===== -->
+<div class="bottom-grid">
+
+    <!-- SAVINGS -->
+    <div class="card-sb">
+        <div class="head">
+            <span class="title"><i class="fas fa-piggy-bank"></i>Savings Goals</span>
+            <div class="actions">
+                @if (Model.SavingsGoals != null && Model.SavingsGoals.Any())
+                {
+                    <a href="@Url.Action("Create", "Savings")" class="add-btn">+ Add</a>
+                }
+                @if (Model.SavingsGoals != null && Model.SavingsGoals.Count() > 3)
+                {
+                    <a href="@Url.Action("Index", "Savings")">View All →</a>
+                }
+            </div>
+        </div>
+        <div class="body">
+            @if (Model.SavingsGoals != null && Model.SavingsGoals.Any())
+            {
+                var displayGoals = Model.SavingsGoals.Take(3);
+                foreach (var goal in displayGoals)
+                {
+                    var pct = goal.ProgressPercentage;
+                    <div class="p-item">
+                        <div class="top">
+                            <span class="label">@goal.GoalName</span>
+                            <span class="value">@goal.CurrentAmount.ToString("C")</span>
+                        </div>
+                        <div class="p-bar">
+                            <div class="fill" style="width:@(pct>100?100:pct)%; background:@(pct>=100?"#16a34a":pct>=70?"#c9a84c":"#003399");"></div>
+                        </div>
+                        <div class="bottom">
+                            <span>@pct.ToString("F0")% of @goal.TargetAmount.ToString("C")</span>
+                            @if (goal.Deadline.HasValue)
+                            {
+                                var days = (goal.Deadline.Value - DateTime.Now).Days;
+                                <span style="color:@(days<30?"#dc2626":"#6b7a8f");">@days days left</span>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-piggy-bank"></i>
+                    No goals set
+                    <div style="margin-top:4px;"><a href="@Url.Action("Create", "Savings")">Create your first goal</a></div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- BUDGET -->
+    <div class="card-sb">
+        <div class="head">
+            <span class="title"><i class="fas fa-chart-pie"></i>Budget Tracker</span>
+            <div class="actions">
+                @if (Model.Budgets != null && Model.Budgets.Any())
+                {
+                    <a href="@Url.Action("Create", "Budget")" class="add-btn">+ Add</a>
+                }
+                @if (Model.Budgets != null && Model.Budgets.Count() > 3)
+                {
+                    <a href="@Url.Action("Index", "Budget")">View All →</a>
+                }
+            </div>
+        </div>
+        <div class="body">
+            @if (Model.Budgets != null && Model.Budgets.Any())
+            {
+                var displayBudgets = Model.Budgets.Take(3);
+                foreach (var budget in displayBudgets)
+                {
+                    var pct = budget.SpentPercentage;
+                    <div class="p-item">
+                        <div class="top">
+                            <span class="label">@budget.Category</span>
+                            <span class="value">@budget.SpentAmount.ToString("C")</span>
+                        </div>
+                        <div class="p-bar">
+                            <div class="fill" style="width:@(pct>100?100:pct)%; background:@(pct>100?"#dc2626":pct>=80?"#c9a84c":"#003399");"></div>
+                        </div>
+                        <div class="bottom">
+                            <span>@pct.ToString("F0")% of @budget.AllocatedAmount.ToString("C")</span>
+                            <span style="color:@(pct>100?"#dc2626":pct>=80?"#c9a84c":"#16a34a");">@(pct>100?"Over":pct>=80?"Near limit":"On track")</span>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-chart-pie"></i>
+                    No budgets set
+                    <div style="margin-top:4px;"><a href="@Url.Action("Create", "Budget")">Create your first budget</a></div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    let balanceVisible = false;
+
+    function toggleBalance() {
+        const display = document.getElementById('balanceDisplay');
+        const icon = document.getElementById('eyeIcon');
+
+        if (balanceVisible) {
+            display.textContent = '••••••••';
+            display.className = 'amount hidden';
+            icon.className = 'fas fa-eye-slash';
+            balanceVisible = false;
+        } else {
+            display.textContent = '@Model.TotalBalance.ToString("C")';
+            display.className = 'amount';
+            icon.className = 'fas fa-eye';
+            balanceVisible = true;
+        }
+    }
+</script>

@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "Settings";
+    ViewBag.SubTitle = "Customize your experience";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="animate-fade-in">
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card card-elegant">
+                <div class="card-header">
+                    <i class="fas fa-palette me-2"></i>Appearance
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <div>
+                            <h6 class="mb-0">Dark Mode</h6>
+                            <small class="text-muted">Switch between light and dark theme</small>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="darkModeToggle" />
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center py-2">
+                        <div>
+                            <h6 class="mb-0">Compact View</h6>
+                            <small class="text-muted">Reduce spacing for more content</small>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="compactToggle" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card card-elegant">
+                <div class="card-header">
+                    <i class="fas fa-bell me-2"></i>Notifications
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <div>
+                            <h6 class="mb-0">Email Notifications</h6>
+                            <small class="text-muted">Receive updates via email</small>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" checked id="emailToggle" />
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <div>
+                            <h6 class="mb-0">Transaction Alerts</h6>
+                            <small class="text-muted">Get notified on every transaction</small>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" checked id="transactionToggle" />
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center py-2">
+                        <div>
+                            <h6 class="mb-0">Budget Alerts</h6>
+                            <small class="text-muted">Notifications when nearing budget limits</small>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" checked id="budgetToggle" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

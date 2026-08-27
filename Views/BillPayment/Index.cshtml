@@ -1,0 +1,164 @@
+﻿@model IEnumerable<StandardBank.Models.BillPayment>
+
+@{
+    ViewBag.Title = "Bill Payments";
+    ViewBag.SubTitle = "View your payment history";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="animate-fade-in">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Bill Payments</h4>
+            <p class="text-muted small">View and manage your bill payments</p>
+        </div>
+        <a href="@Url.Action("PayBill", "BillPayment")" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>Pay Bill
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Quick Actions -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3 col-6">
+            <a href="@Url.Action("PayBill", "BillPayment")" class="text-decoration-none">
+                <div class="card card-elegant text-center py-3">
+                    <div class="card-body">
+                        <div class="stat-icon bg-primary bg-opacity-10 text-primary rounded-3 p-3 d-inline-block mb-2">
+                            <i class="fas fa-bolt fa-2x"></i>
+                        </div>
+                        <h6 class="mb-0 fw-semibold">Electricity</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-6">
+            <a href="@Url.Action("PayBill", "BillPayment")" class="text-decoration-none">
+                <div class="card card-elegant text-center py-3">
+                    <div class="card-body">
+                        <div class="stat-icon bg-info bg-opacity-10 text-info rounded-3 p-3 d-inline-block mb-2">
+                            <i class="fas fa-tint fa-2x"></i>
+                        </div>
+                        <h6 class="mb-0 fw-semibold">Water</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-6">
+            <a href="@Url.Action("PayBill", "BillPayment")" class="text-decoration-none">
+                <div class="card card-elegant text-center py-3">
+                    <div class="card-body">
+                        <div class="stat-icon bg-warning bg-opacity-10 text-warning rounded-3 p-3 d-inline-block mb-2">
+                            <i class="fas fa-tv fa-2x"></i>
+                        </div>
+                        <h6 class="mb-0 fw-semibold">DSTV</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-6">
+            <a href="@Url.Action("PayBill", "BillPayment")" class="text-decoration-none">
+                <div class="card card-elegant text-center py-3">
+                    <div class="card-body">
+                        <div class="stat-icon bg-success bg-opacity-10 text-success rounded-3 p-3 d-inline-block mb-2">
+                            <i class="fas fa-wifi fa-2x"></i>
+                        </div>
+                        <h6 class="mb-0 fw-semibold">Internet</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Payments Table -->
+    <div class="card card-elegant">
+        <div class="card-header">
+            <i class="fas fa-history me-2"></i>Recent Payments
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Bill Type</th>
+                            <th>Account</th>
+                            <th>Reference</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var payment in Model)
+                            {
+                                <tr>
+                                    <td><small>@payment.PaymentDate.ToString("dd MMM yyyy HH:mm")</small></td>
+                                    <td>
+                                        <span class="badge bg-secondary">
+                                            <i class="fas @(payment.BillType == "Electricity" ? "fa-bolt" :
+                                                        payment.BillType == "Water" ? "fa-tint" :
+                                                        payment.BillType == "DSTV" ? "fa-tv" :
+                                                        payment.BillType == "Internet" ? "fa-wifi" : "fa-file-invoice") me-1"></i>
+                                            @payment.BillType
+                                        </span>
+                                    </td>
+                                    <td><small>@payment.Account?.AccountNumber</small></td>
+                                    <td><small>@payment.ReferenceNumber</small></td>
+                                    <td class="fw-bold text-danger">@payment.Amount.ToString("C")</td>
+                                    <td>
+                                        <span class="badge bg-@(payment.Status == "Completed" ? "success" : payment.Status == "Pending" ? "warning" : "danger")">
+                                            @payment.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="@Url.Action("Details", "BillPayment", new { id = payment.Id })" class="btn btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="@Url.Action("Receipt", "BillPayment", new { id = payment.Id })" class="btn btn-outline-secondary">
+                                                <i class="fas fa-receipt"></i>
+                                            </a>
+                                            @if (payment.Status == "Pending")
+                                            {
+                                                using (Html.BeginForm("CancelScheduled", "BillPayment", new { id = payment.Id }, FormMethod.Post))
+                                                {
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Cancel this scheduled payment?')">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                }
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="7" class="text-center text-muted py-4">No bill payments yet</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
