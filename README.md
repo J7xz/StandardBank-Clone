@@ -1,87 +1,144 @@
-# 🏦 Standard Bank - Online Banking Platform
+Standard Bank clone - Online Banking Platform
+A full-featured online banking application built with ASP.NET MVC (.NET Framework), Entity Framework, and SQL Server.
 
-A full-featured online banking application built with ASP.NET MVC, Entity Framework, and SQL Server. This platform provides a complete banking experience including account management, fund transfers, bill payments, savings goals, budgeting with AI insights, and an admin dashboard.
+Features
+Authentication
+User registration with Full Name, Email, Phone Number, and ID Number
 
-## ✨ Features
+Secure login with email and password
 
-### 🔐 Authentication & Profile
-- User registration with email, phone, and ID number
-- Secure login/logout with password reset
-- Profile management with edit functionality
-- Password change with validation
+Password reset functionality
 
-### 📊 Dashboard
-- Real-time balance overview across all accounts
-- Quick action buttons (Send Money, Pay Bills, New Account)
-- Recent transactions with filtering
-- Savings goals progress tracking
-- Budget spending summary with progress bars
+Profile management (view and edit personal information)
 
-### 💰 Core Banking
-- **Multiple Account Types**: Cheque, Savings, and Student accounts
-- **Internal Transfers**: Transfer between your own accounts
-- **External Transfers**: Send money to other banks with beneficiary management
-- **Transaction History**: Filter by date, type, account, and search
-- **PDF Statements**: Export account statements
+Change password with current password verification
 
-### 📝 Bill Payments
-- Pay bills for Electricity, Water, DSTV, Internet, Municipality, and Education
-- Payment history with filters
-- Printable receipts
+Role-based access (Customer and Admin)
 
-### 🎯 Savings Goals
-- Create and track savings goals with target amounts and deadlines
-- Add/withdraw funds with progress visualization
-- Automatic completion tracking
+Dashboard
+Total balance overview across all accounts
 
-### 📈 Budget Tracker
-- Category-based monthly budgets (Groceries, Transport, Entertainment, etc.)
-- Real-time spending tracking
-- AI-powered spending insights and alerts
-- Yearly summary view
+Quick action buttons: Send Money, Pay Bills, New Account
 
-### 👥 Beneficiaries
-- Save frequent recipients for quick transfers
-- Edit and delete beneficiary details
+Account summary with balances and status
 
-### 🔔 Notifications
-- In-app notification system
-- Mark as read/unread
-- Admin broadcast feature
+Recent transactions (last 5)
 
-### 🔧 Admin Panel
-- User management (view, lock, unlock)
-- Transaction monitoring with filters
-- System logs with activity tracking
-- Generate reports
+Savings goals progress tracking
 
-## 🛠️ Technology Stack
+Monthly budget tracking with progress bars
 
-| Layer | Technology |
-|-------|------------|
-| **Backend** | ASP.NET MVC (.NET Framework) |
-| **ORM** | Entity Framework 6 |
-| **Database** | SQL Server / LocalDB |
-| **Frontend** | HTML5, CSS3, JavaScript, jQuery |
-| **UI Framework** | Bootstrap 5 |
-| **Authentication** | ASP.NET Identity |
-| **Icons** | Font Awesome 6 |
-| **Fonts** | Google Fonts (Inter) |
+Balance toggle for privacy (hide/show)
 
-## 🚀 Getting Started
+Banking
+Multiple account types: Cheque, Savings, Student
 
-### Prerequisites
-- Visual Studio 2022 or later
-- .NET Framework 4.8
-- SQL Server or LocalDB
+Create new accounts with optional initial deposit
 
-### Installation
+Internal transfers between your own accounts
 
-1. **Clone the repository**
-```bash
-git clone https://github.com/yourusername/StandardBank.git
-cd StandardBank
-Update the database connection string in Web.config:
+External transfers to other banks and beneficiaries
+
+Beneficiary management (save, edit, delete)
+
+Transaction history with filters (account, type, date range, search)
+
+Account details with recent transactions
+
+Bill Payments
+Pay bills for Electricity, Water, DSTV, Internet, Municipality, Education
+
+Payment history with filters
+
+Printable receipts
+
+Reference number tracking
+
+Savings Goals
+Create savings targets with deadlines
+
+Add funds from accounts to savings goals
+
+Withdraw funds from savings goals to accounts
+
+Visual progress tracking
+
+Deadline monitoring with color-coded alerts
+
+Budget Tracking
+Category-based monthly budgets (Groceries, Transport, Entertainment, etc.)
+
+Real-time spending tracking against budgets
+
+AI-powered spending insights (highest spending category, month-over-month trends, weekend patterns)
+
+Budget alerts when nearing or exceeding limits
+
+Yearly summary view
+
+Notifications
+In-app notification system
+
+Read/Unread status tracking
+
+Mark individual or all notifications as read
+
+Delete individual or all read notifications
+
+Admin broadcast to all users
+
+Admin Panel
+System overview dashboard with metrics (users, accounts, transactions)
+
+User management (view, search, filter, lock, unlock)
+
+User details view with accounts and transactions
+
+Transaction monitoring with filtering
+
+Admin activity logs with timestamps and IP addresses
+
+Report generation with date range filtering
+
+Technology Stack
+Layer	Technology
+Backend	ASP.NET MVC (.NET Framework 4.8)
+ORM	Entity Framework 6 (Code First)
+Database	SQL Server / LocalDB
+Authentication	ASP.NET Identity
+Frontend	HTML5, CSS3, JavaScript, jQuery
+UI Framework	Bootstrap 5
+Icons	Font Awesome 6
+Fonts	Google Fonts (Inter)
+Database Schema
+Model	Purpose
+User	Application user with profile information
+Account	Bank accounts (Cheque, Savings, Student)
+Transaction	All financial transactions (debits and credits)
+Beneficiary	Saved recipients for transfers
+BillPayment	Bill payment records
+SavingsGoal	User savings targets
+Budget	Monthly spending limits by category
+Notification	In-app notifications
+AdminLog	Admin activity tracking
+Clone the Repository
+bash
+git clone https://github.com/J7xz/StandardBank-Clone.git
+cd StandardBank-Clone
+Installation
+Prerequisites
+Visual Studio 2022 or later
+
+.NET Framework 4.8
+
+SQL Server or LocalDB
+
+Steps
+Clone the repository (see above)
+
+Open the solution in Visual Studio
+
+Update the connection string in Web.config:
 
 xml
 <connectionStrings>
@@ -92,22 +149,26 @@ xml
 Run database migrations in Package Manager Console:
 
 powershell
+Enable-Migrations
+Add-Migration InitialCreate
 Update-Database
-Create admin user (optional):
+Create an admin user:
 
-Run the project and navigate to /Setup/CreateAdmin
+Run the application
 
-Or use the Seed method in Migrations/Configuration.cs
+Navigate to /Setup/CreateAdmin
 
-Run the application (F5 in Visual Studio)
+Click the "Create Admin" button
 
-Default Login
-Admin: admin@standardbank.com / Admin@123
+Run the application (F5)
 
-📁 Project Structure
+Default Credentials
+Role	Email	Password
+Admin	admin@standardbank.com	Admin@123
+Project Structure
 text
 StandardBank/
-├── Controllers/          # MVC Controllers
+├── Controllers/
 │   ├── AccountController.cs
 │   ├── AdminController.cs
 │   ├── BankingController.cs
@@ -119,7 +180,7 @@ StandardBank/
 │   ├── NotificationController.cs
 │   ├── ProfileController.cs
 │   └── SavingsController.cs
-├── Models/               # Entity Models
+├── Models/
 │   ├── User.cs
 │   ├── Account.cs
 │   ├── Transaction.cs
@@ -129,8 +190,8 @@ StandardBank/
 │   ├── SavingsGoal.cs
 │   ├── Notification.cs
 │   └── AdminLog.cs
-├── ViewModels/           # View Models
-├── Views/                # Razor Views
+├── ViewModels/
+├── Views/
 │   ├── Account/
 │   ├── Admin/
 │   ├── Banking/
@@ -142,28 +203,16 @@ StandardBank/
 │   ├── Notification/
 │   ├── Profile/
 │   └── Savings/
-├── Content/              # CSS, Images, Assets
-├── Scripts/              # JavaScript files
-├── App_Start/            # Startup configuration
-├── Migrations/           # EF Migrations
-└── Web.config            # Application configuration
-🎨 UI Features
-Dark Navy & Gold Theme - Standard Bank inspired branding
+├── App_Start/
+│   └── IdentityConfig.cs
+├── Migrations/
+├── Content/
+├── Scripts/
+└── Web.config
+Security
+ASP.NET Identity for authentication and authorization
 
-Responsive Design - Works on desktop, tablet, and mobile
-
-Sidebar Navigation - Clean and organized menu
-
-Animated Elements - Smooth transitions and loading states
-
-Interactive Charts - Visual spending insights
-
-🔒 Security Features
-ASP.NET Identity authentication
-
-Role-based authorization (Admin/User)
-
-Password hashing and validation
+Role-based access control (Admin / User)
 
 Anti-forgery tokens on all forms
 
@@ -171,59 +220,7 @@ SQL injection protection via Entity Framework
 
 XSS protection with Razor encoding
 
-📸 Screenshots
-Dashboard	Accounts
-Dashboard view with balance, quick actions, and recent transactions	Account list with balance and details
-Transfers	Budget Insights
-Internal and external transfer functionality	AI-powered spending analysis and alerts
-Savings Goals	Admin Panel
-Track savings progress with visual goals	User management and transaction monitoring
-🚀 Future Enhancements
-□ Two-Factor Authentication (2FA)
-□ Email notifications
-□ Mobile app API
-□ Investment tracking
-□ Tax reports
-□ Multi-language support
-🤝 Contributing
-Fork the repository
+Password hashing and validation
 
-Create your feature branch (git checkout -b feature/AmazingFeature)
-
-Commit your changes (git commit -m 'Add some AmazingFeature')
-
-Push to the branch (git push origin feature/AmazingFeature)
-
-Open a Pull Request
-
-📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-🙏 Acknowledgments
-Bootstrap for the UI framework
-
-Font Awesome for icons
-
-Google Fonts for typography
-
-ASP.NET Identity for authentication
-
-
-
-Made with ❤️ and C#
-
-text
-
----
-
-## Save this file:
-
-1. Create a file called `README.md` in your project root
-2. Copy and paste the content above
-3. Replace `yourusername` with your actual GitHub username
-4. Add, commit, and push:
-
-```cmd
-git add README.md
-git commit -m "Add README"
-git push
+License
+MIT License
