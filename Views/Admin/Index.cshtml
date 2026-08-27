@@ -2,221 +2,426 @@
 
 @{
     ViewBag.Title = "Admin Dashboard";
-    ViewBag.SubTitle = "System overview and metrics";
+    ViewBag.SubTitle = "";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="animate-fade-in">
-    <!-- Stats Row -->
-    <div class="row g-4 mb-4">
-        <div class="col-xl-3 col-md-6">
-            <div class="card card-elegant">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-primary bg-opacity-10 text-primary rounded-3 p-3 me-3">
-                            <i class="fas fa-users fa-2x"></i>
-                        </div>
-                        <div>
-                            <h6 class="text-muted mb-1 small">Total Users</h6>
-                            <h3 class="fw-bold mb-0">@Model.TotalUsers</h3>
-                            <small class="text-muted">@Model.ActiveUsers active</small>
-                        </div>
+<style>
+    /* ===== REMOVE SEARCH BAR FROM HEADER ===== */
+    .top-header .header-right .search-box {
+        display: none !important;
+    }
+
+    /* ===== PAGE HEADER ===== */
+    .page-header {
+        margin-bottom: 28px;
+    }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0;
+        }
+
+        .page-header p {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 4px 0 0;
+        }
+
+    /* ===== STATS ===== */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+
+    .stat-box {
+        background: #fff;
+        border-radius: 12px;
+        padding: 18px 22px;
+        border: 1px solid #eaedf2;
+        transition: 0.2s;
+    }
+
+        .stat-box:hover {
+            border-color: #003399;
+        }
+
+        .stat-box .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 2px 0;
+        }
+
+        .stat-box .label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6b7a8f;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-box .sub {
+            font-size: 13px;
+            color: #6b7a8f;
+            margin-top: 2px;
+        }
+
+    /* ===== CARDS ===== */
+    .admin-card {
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid #eaedf2;
+        overflow: hidden;
+        margin-bottom: 24px;
+    }
+
+        .admin-card .head {
+            padding: 12px 20px;
+            border-bottom: 1px solid #eaedf2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fafbfc;
+        }
+
+            .admin-card .head .title {
+                font-size: 14px;
+                font-weight: 600;
+                color: #0a1628;
+            }
+
+                .admin-card .head .title i {
+                    color: #003399;
+                    margin-right: 8px;
+                }
+
+            .admin-card .head a {
+                font-size: 13px;
+                color: #003399;
+                font-weight: 500;
+                text-decoration: none;
+            }
+
+                .admin-card .head a:hover {
+                    text-decoration: underline;
+                }
+
+        .admin-card .body {
+            padding: 0;
+            overflow-x: auto;
+        }
+
+        .admin-card table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+            .admin-card table th {
+                background: #f8fafc;
+                color: #6b7a8f;
+                font-weight: 600;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                padding: 10px 16px;
+                text-align: left;
+                border-bottom: 1px solid #eaedf2;
+            }
+
+            .admin-card table td {
+                padding: 10px 16px;
+                border-bottom: 1px solid #f5f7fa;
+            }
+
+            .admin-card table tr:last-child td {
+                border-bottom: none;
+            }
+
+            .admin-card table tr:hover td {
+                background: #fafbfc;
+            }
+
+    .badge-credit {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 12px;
+        border-radius: 20px;
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .badge-debit {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 12px;
+        border-radius: 20px;
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .badge-active {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 12px;
+        border-radius: 20px;
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .badge-inactive {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 12px;
+        border-radius: 20px;
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .badge-action {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 12px;
+        border-radius: 20px;
+        background: #e8f0fe;
+        color: #003399;
+    }
+
+    .empty-state {
+        padding: 32px 20px;
+        text-align: center;
+        color: #6b7a8f;
+    }
+
+        .empty-state i {
+            font-size: 28px;
+            opacity: 0.15;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .empty-state .main {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0a1628;
+        }
+
+        .empty-state .sub {
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+    .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    @@media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .two-col {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div>
+
+    <!-- ===== HEADER ===== -->
+    <div class="page-header">
+        <h1>Admin Dashboard</h1>
+        <p>System overview and key metrics</p>
+    </div>
+
+    <!-- ===== STATS ===== -->
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="label">Users</div>
+            <div class="number">@Model.TotalUsers</div>
+            <div class="sub">@Model.ActiveUsers active</div>
+        </div>
+        <div class="stat-box">
+            <div class="label">Accounts</div>
+            <div class="number">@Model.TotalAccounts</div>
+            <div class="sub">@Model.TotalBalance.ToString("C") total</div>
+        </div>
+        <div class="stat-box">
+            <div class="label">Transactions</div>
+            <div class="number">@Model.TotalTransactions</div>
+            <div class="sub">@Model.TodayTransactions.ToString("C") today</div>
+        </div>
+    </div>
+
+    <!-- ===== TWO COLUMN ===== -->
+    <div class="two-col">
+
+        <!-- Recent Transactions -->
+        <div class="admin-card">
+            <div class="head">
+                <span class="title"><i class="fas fa-clock"></i>Recent Transactions</span>
+                <a href="@Url.Action("Transactions", "Admin")">View All →</a>
+            </div>
+            <div class="body">
+                @if (Model.RecentTransactions != null && Model.RecentTransactions.Any())
+                {
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var t in Model.RecentTransactions.Take(10))
+                            {
+                                <tr>
+                                    <td>
+                                        @if (t.Account != null && t.Account.User != null)
+                                        {
+                                            <span style="font-weight:600; color:#0a1628;">@t.Account.User.FullName</span>
+                                            <small style="display:block; color:#6b7a8f;">@t.Account.AccountNumber</small>
+                                        }
+                                        else
+                                        {
+                                            <span style="color:#6b7a8f;">N/A</span>
+                                        }
+                                    </td>
+                                    <td style="font-weight:600; color:@(t.TransactionType == "Credit" ? "#16a34a" : "#dc2626");">
+                                        @(t.TransactionType == "Credit" ? "+" : "-")@t.Amount.ToString("C")
+                                    </td>
+                                    <td>
+                                        <span class="@(t.TransactionType == "Credit" ? "badge-credit" : "badge-debit")">@t.TransactionType</span>
+                                    </td>
+                                    <td><small>@t.TransactionDate.ToString("dd MMM HH:mm")</small></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <i class="fas fa-receipt"></i>
+                        <div class="main">No transactions</div>
+                        <div class="sub">Recent transactions will appear here</div>
                     </div>
-                </div>
+                }
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6">
-            <div class="card card-elegant">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-success bg-opacity-10 text-success rounded-3 p-3 me-3">
-                            <i class="fas fa-wallet fa-2x"></i>
-                        </div>
-                        <div>
-                            <h6 class="text-muted mb-1 small">Total Balance</h6>
-                            <h3 class="fw-bold mb-0">@Model.TotalBalance.ToString("C")</h3>
-                            <small class="text-muted">@Model.TotalAccounts accounts</small>
-                        </div>
-                    </div>
-                </div>
+        <!-- Recent Users -->
+        <div class="admin-card">
+            <div class="head">
+                <span class="title"><i class="fas fa-users"></i>Recent Users</span>
+                <a href="@Url.Action("Users", "Admin")">View All →</a>
             </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="card card-elegant">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-info bg-opacity-10 text-info rounded-3 p-3 me-3">
-                            <i class="fas fa-exchange-alt fa-2x"></i>
-                        </div>
-                        <div>
-                            <h6 class="text-muted mb-1 small">Transactions</h6>
-                            <h3 class="fw-bold mb-0">@Model.TotalTransactions</h3>
-                            <small class="text-muted">Today: @Model.TodayTransactions.ToString("C")</small>
-                        </div>
+            <div class="body">
+                @if (Model.RecentUsers != null && Model.RecentUsers.Any())
+                {
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var u in Model.RecentUsers.Take(10))
+                            {
+                                <tr>
+                                    <td><span style="font-weight:600; color:#0a1628;">@u.FullName</span></td>
+                                    <td><small>@u.Email</small></td>
+                                    <td>
+                                        <span class="@(u.IsActive ? "badge-active" : "badge-inactive")">
+                                            @(u.IsActive ? "Active" : "Inactive")
+                                        </span>
+                                    </td>
+                                    <td><small>@u.DateRegistered.ToString("dd MMM yyyy")</small></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <div class="main">No users</div>
+                        <div class="sub">Recent users will appear here</div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="card card-elegant">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-warning bg-opacity-10 text-warning rounded-3 p-3 me-3">
-                            <i class="fas fa-user-plus fa-2x"></i>
-                        </div>
-                        <div>
-                            <h6 class="text-muted mb-1 small">New Registrations</h6>
-                            <h3 class="fw-bold mb-0">@Model.TodayRegistrations</h3>
-                            <small class="text-muted">Today</small>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
         </div>
     </div>
 
-    <!-- Recent Activity Row -->
-    <div class="row g-4">
-        <div class="col-lg-6">
-            <div class="card card-elegant">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-clock me-2"></i>Recent Transactions</span>
-                    <a href="@Url.Action("Transactions", "Admin")" class="btn btn-sm btn-outline-primary">View All</a>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th>User</th>
-                                    <th>Amount</th>
-                                    <th>Type</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.RecentTransactions.Any())
-                                {
-                                    foreach (var t in Model.RecentTransactions.Take(10))
-                                    {
-                                        <tr>
-                                            <td>
-                                                <span class="fw-semibold">@t.Account?.User?.FullName</span>
-                                                <small class="d-block text-muted">@t.Account?.AccountNumber</small>
-                                            </td>
-                                            <td class="fw-bold @(t.TransactionType == "Credit" ? "text-success" : "text-danger")">
-                                                @(t.TransactionType == "Credit" ? "+" : "-")@t.Amount.ToString("C")
-                                            </td>
-                                            <td>
-                                                <span class="badge @(t.TransactionType == "Credit" ? "bg-success" : "bg-danger") bg-opacity-10 text-@(t.TransactionType == "Credit" ? "success" : "danger")">
-                                                    @t.TransactionType
-                                                </span>
-                                            </td>
-                                            <td><small>@t.TransactionDate.ToString("dd MMM HH:mm")</small></td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr><td colspan="4" class="text-center text-muted py-3">No recent transactions</td></tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+    <!-- ===== ADMIN LOGS ===== -->
+    <div class="admin-card">
+        <div class="head">
+            <span class="title"><i class="fas fa-history"></i>Admin Activity</span>
+            <a href="@Url.Action("Logs", "Admin")">View All →</a>
         </div>
-
-        <div class="col-lg-6">
-            <div class="card card-elegant">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-user-clock me-2"></i>Recent Users</span>
-                    <a href="@Url.Action("Users", "Admin")" class="btn btn-sm btn-outline-primary">View All</a>
+        <div class="body">
+            @if (Model.RecentLogs != null && Model.RecentLogs.Any())
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Details</th>
+                            <th>IP</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in Model.RecentLogs.Take(10))
+                        {
+                            <tr>
+                                <td><span class="badge-action">@log.Action</span></td>
+                                <td><small>@log.Details</small></td>
+                                <td><small>@log.IPAddress</small></td>
+                                <td><small>@log.Timestamp.ToString("dd MMM HH:mm")</small></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-history"></i>
+                    <div class="main">No admin logs yet</div>
+                    <div class="sub">Logs appear when you lock/unlock users or delete transactions</div>
                 </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th>User</th>
-                                    <th>Email</th>
-                                    <th>Status</th>
-                                    <th>Joined</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.RecentUsers.Any())
-                                {
-                                    foreach (var u in Model.RecentUsers.Take(10))
-                                    {
-                                        <tr>
-                                            <td><span class="fw-semibold">@u.FullName</span></td>
-                                            <td><small>@u.Email</small></td>
-                                            <td>
-                                                <span class="badge @(u.IsActive ? "bg-success" : "bg-danger")">
-                                                    @(u.IsActive ? "Active" : "Inactive")
-                                                </span>
-                                            </td>
-                                            <td><small>@u.DateRegistered.ToString("dd MMM yyyy")</small></td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr><td colspan="4" class="text-center text-muted py-3">No recent users</td></tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
     </div>
 
-    <!-- Admin Logs -->
-    <div class="row g-4 mt-2">
-        <div class="col-12">
-            <div class="card card-elegant">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span><i class="fas fa-history me-2"></i>Recent Admin Activity</span>
-                    <a href="@Url.Action("Logs", "Admin")" class="btn btn-sm btn-outline-primary">View All</a>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Action</th>
-                                    <th>Details</th>
-                                    <th>IP Address</th>
-                                    <th>Timestamp</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.RecentLogs.Any())
-                                {
-                                    foreach (var log in Model.RecentLogs.Take(10))
-                                    {
-                                        <tr>
-                                            <td><span class="badge bg-secondary">@log.Action</span></td>
-                                            <td><small>@log.Details</small></td>
-                                            <td><small>@log.IPAddress</small></td>
-                                            <td><small>@log.Timestamp.ToString("dd MMM yyyy HH:mm")</small></td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr><td colspan="4" class="text-center text-muted py-3">No admin logs</td></tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
+
+<script>
+    // ===== HIDE SEARCH BAR ON ADMIN PAGES =====
+    document.addEventListener('DOMContentLoaded', function() {
+        var searchBox = document.querySelector('.top-header .header-right .search-box');
+        if (searchBox) {
+            searchBox.style.display = 'none';
+        }
+    });
+</script>

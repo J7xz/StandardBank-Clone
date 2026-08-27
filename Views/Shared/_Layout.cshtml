@@ -5,53 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.Title - Standard Bank</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" />
 
+    @Styles.Render("~/Content/css")
+
     <style>
+        /* ===== ROOT VARIABLES ===== */
+        :root {
+            --primary: #0a1628;
+            --primary-light: #1a2a4a;
+            --primary-dark: #050d1a;
+            --secondary: #4a6cf7;
+            --accent: #ffd54f;
+            --sidebar-width: 260px;
+            --header-height: 64px;
+            --bg-light: #f0f2f5;
+            --card-shadow: 0 2px 16px rgba(10, 22, 40, 0.08);
+            --card-hover-shadow: 0 8px 40px rgba(10, 22, 40, 0.14);
+            --radius: 12px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --text-primary: #0a1628;
+            --text-secondary: #64748b;
+            --border-color: #e8edf2;
+        }
+
+        /* ===== RESET ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --primary: #003399;
-            --primary-dark: #002266;
-            --primary-light: #1a4cb3;
-            --gold: #c9a84c;
-            --gold-light: #f5e6b8;
-            --bg: #f0f2f7;
-            --card: #ffffff;
-            --text: #0a1628;
-            --text-light: #6b7a8f;
-            --border: #eaedf2;
-            --shadow: 0 2px 12px rgba(0,0,0,0.04);
-            --radius: 16px;
-            --sidebar: 240px;
-        }
-
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.5;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            overflow-x: hidden;
         }
+
+        a {
+            text-decoration: none;
+        }
+
+            a:hover {
+                text-decoration: none;
+            }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(10, 22, 40, 0.15);
+            border-radius: 10px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: rgba(10, 22, 40, 0.25);
+            }
 
         /* ===== SIDEBAR ===== */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
-            width: var(--sidebar);
+            width: var(--sidebar-width);
             height: 100vh;
-            background: var(--primary-dark);
-            z-index: 1000;
+            background: linear-gradient(180deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
+            z-index: 1050;
+            transition: var(--transition);
+            box-shadow: 4px 0 30px rgba(10, 22, 40, 0.2);
+            overflow-y: auto;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
-            padding: 0;
-            overflow-y: auto;
         }
 
             .sidebar::-webkit-scrollbar {
@@ -59,106 +97,115 @@
             }
 
             .sidebar::-webkit-scrollbar-thumb {
-                background: rgba(255,255,255,0.1);
+                background: rgba(255, 255, 255, 0.15);
                 border-radius: 10px;
             }
 
-        /* Brand */
+        /* Sidebar Brand */
         .sidebar-brand {
-            padding: 24px 20px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             flex-shrink: 0;
         }
 
-            .sidebar-brand a {
+            .sidebar-brand .brand-link {
                 display: flex;
                 align-items: center;
                 gap: 12px;
                 text-decoration: none;
             }
 
-            .sidebar-brand .logo {
-                width: 40px;
-                height: 40px;
-                border-radius: 10px;
-                background: rgba(255,255,255,0.06);
-                border: 1px solid rgba(255,255,255,0.06);
+                .sidebar-brand .brand-link:hover {
+                    text-decoration: none;
+                }
+
+            .sidebar-brand .brand-icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1.5px solid rgba(255, 255, 255, 0.08);
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-weight: 800;
-                font-size: 15px;
-                color: #fff;
+                flex-shrink: 0;
                 position: relative;
+                font-size: 16px;
+                font-weight: 800;
+                color: #fff;
+                letter-spacing: -0.5px;
             }
 
-                .sidebar-brand .logo .dot {
+                .sidebar-brand .brand-icon .dot {
                     position: absolute;
                     bottom: -2px;
                     right: -2px;
                     width: 10px;
                     height: 10px;
-                    background: var(--gold);
+                    background: var(--accent);
                     border-radius: 50%;
-                    border: 2px solid var(--primary-dark);
+                    border: 2px solid var(--primary);
                 }
 
-            .sidebar-brand .brand .name {
-                font-weight: 700;
+            .sidebar-brand .brand-text .name {
                 font-size: 15px;
+                font-weight: 700;
                 color: #fff;
-                letter-spacing: 0.5px;
+                letter-spacing: 0.3px;
             }
 
-            .sidebar-brand .brand .sub {
+            .sidebar-brand .brand-text .sub {
                 font-size: 9px;
                 font-weight: 400;
-                color: rgba(255,255,255,0.2);
-                letter-spacing: 2px;
+                color: rgba(255, 255, 255, 0.3);
+                letter-spacing: 2.5px;
                 text-transform: uppercase;
                 margin-top: 1px;
             }
 
-        /* Navigation */
+        /* Sidebar Navigation */
         .sidebar-nav {
             flex: 1;
-            padding: 20px 14px 20px;
+            padding: 16px 14px 20px;
         }
 
-            .sidebar-nav .label {
+            .sidebar-nav .nav-label {
                 font-size: 10px;
                 font-weight: 600;
-                color: rgba(255,255,255,0.15);
+                color: rgba(255, 255, 255, 0.2);
                 text-transform: uppercase;
                 letter-spacing: 1.2px;
-                padding: 4px 12px 8px;
+                padding: 10px 14px 6px;
             }
 
-            .sidebar-nav a {
+            .sidebar-nav .nav-item {
+                margin-bottom: 1px;
+            }
+
+            .sidebar-nav .nav-link {
                 display: flex;
                 align-items: center;
-                gap: 12px;
-                padding: 10px 14px;
-                border-radius: 10px;
-                color: rgba(255,255,255,0.35);
-                font-size: 14px;
+                padding: 9px 14px;
+                border-radius: 8px;
+                color: rgba(255, 255, 255, 0.5);
+                font-size: 13.5px;
                 font-weight: 500;
-                text-decoration: none;
-                transition: 0.2s;
+                transition: var(--transition);
+                gap: 12px;
                 position: relative;
             }
 
-                .sidebar-nav a:hover {
+                .sidebar-nav .nav-link:hover {
                     color: #fff;
-                    background: rgba(255,255,255,0.04);
+                    background: rgba(255, 255, 255, 0.06);
                 }
 
-                .sidebar-nav a.active {
+                .sidebar-nav .nav-link.active {
                     color: #fff;
-                    background: rgba(255,255,255,0.06);
+                    background: rgba(255, 255, 255, 0.08);
                 }
 
-                    .sidebar-nav a.active::before {
+                    .sidebar-nav .nav-link.active::before {
                         content: '';
                         position: absolute;
                         left: 0;
@@ -166,167 +213,216 @@
                         transform: translateY(-50%);
                         width: 3px;
                         height: 20px;
-                        background: var(--gold);
+                        background: var(--accent);
                         border-radius: 0 4px 4px 0;
                     }
 
-                .sidebar-nav a i {
-                    width: 20px;
-                    font-size: 15px;
+                .sidebar-nav .nav-link i {
+                    width: 18px;
+                    font-size: 14px;
                     text-align: center;
-                    color: rgba(255,255,255,0.2);
+                    color: rgba(255, 255, 255, 0.3);
+                    flex-shrink: 0;
                 }
 
-                .sidebar-nav a:hover i {
+                .sidebar-nav .nav-link:hover i,
+                .sidebar-nav .nav-link.active i {
                     color: #fff;
                 }
 
-                .sidebar-nav a .badge {
+                .sidebar-nav .nav-link .badge {
                     margin-left: auto;
-                    background: var(--gold);
-                    color: var(--primary-dark);
-                    font-size: 10px;
+                    background: var(--accent);
+                    color: var(--primary);
+                    font-size: 9px;
                     font-weight: 700;
-                    padding: 1px 10px;
+                    padding: 1px 8px;
                     border-radius: 12px;
                 }
 
         /* Sidebar Footer */
         .sidebar-footer {
-            padding: 16px 20px 24px;
-            border-top: 1px solid rgba(255,255,255,0.04);
+            padding: 14px 20px 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
             flex-shrink: 0;
         }
 
-            .sidebar-footer .user {
+            .sidebar-footer .user-card {
                 display: flex;
                 align-items: center;
-                gap: 12px;
+                gap: 10px;
             }
 
-                .sidebar-footer .user .avatar {
-                    width: 36px;
-                    height: 36px;
-                    border-radius: 50%;
-                    background: rgba(255,255,255,0.06);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+            .sidebar-footer .user-avatar {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.06);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-weight: 600;
+                font-size: 14px;
+                border: 1.5px solid rgba(255, 255, 255, 0.06);
+                flex-shrink: 0;
+            }
+
+            .sidebar-footer .user-info {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .sidebar-footer .user-name {
+                font-size: 13px;
+                font-weight: 600;
+                color: #fff;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .sidebar-footer .user-email {
+                font-size: 10px;
+                color: rgba(255, 255, 255, 0.3);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .sidebar-footer .logout-btn {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                border: none;
+                background: rgba(255, 255, 255, 0.04);
+                color: rgba(255, 255, 255, 0.3);
+                cursor: pointer;
+                transition: var(--transition);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+                .sidebar-footer .logout-btn:hover {
+                    background: rgba(255, 255, 255, 0.08);
                     color: #fff;
-                    font-weight: 600;
-                    font-size: 14px;
-                    border: 1px solid rgba(255,255,255,0.06);
-                    flex-shrink: 0;
                 }
-
-                .sidebar-footer .user .info .name {
-                    font-size: 13px;
-                    font-weight: 600;
-                    color: #fff;
-                }
-
-                .sidebar-footer .user .info .email {
-                    font-size: 11px;
-                    color: rgba(255,255,255,0.2);
-                }
-
-                .sidebar-footer .user .logout {
-                    width: 30px;
-                    height: 30px;
-                    border-radius: 50%;
-                    border: none;
-                    background: rgba(255,255,255,0.04);
-                    color: rgba(255,255,255,0.2);
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    transition: 0.2s;
-                }
-
-                    .sidebar-footer .user .logout:hover {
-                        background: rgba(255,255,255,0.08);
-                        color: #fff;
-                    }
 
         /* ===== MAIN CONTENT ===== */
-        .main {
-            margin-left: var(--sidebar);
+        .main-content {
+            margin-left: var(--sidebar-width);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         /* ===== HEADER ===== */
-        .header {
-            height: 64px;
-            background: rgba(255,255,255,0.92);
+        .top-header {
+            height: var(--header-height);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            padding: 0 32px;
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1040;
         }
 
-            .header .left {
+            .top-header .header-left {
                 display: flex;
                 align-items: center;
                 gap: 16px;
             }
 
-            .header .toggle {
+            .top-header .toggle-sidebar {
                 display: none;
                 background: none;
                 border: none;
-                font-size: 20px;
-                color: var(--text);
+                font-size: 18px;
+                color: var(--text-primary);
                 cursor: pointer;
                 padding: 4px;
             }
 
-            .header .title {
+            .top-header .page-title {
                 font-size: 16px;
                 font-weight: 700;
-                color: var(--text);
+                color: var(--text-primary);
             }
 
-                .header .title small {
+                .top-header .page-title small {
                     font-weight: 400;
-                    font-size: 13px;
-                    color: var(--text-light);
+                    font-size: 12px;
+                    color: var(--text-secondary);
                     margin-left: 6px;
                 }
 
-            .header .right {
+            .top-header .header-right {
                 display: flex;
                 align-items: center;
-                gap: 4px;
+                gap: 8px;
             }
 
-                .header .right button {
+                .top-header .header-right .search-box {
+                    position: relative;
+                }
+
+                    .top-header .header-right .search-box input {
+                        padding: 7px 14px 7px 34px;
+                        border: 1px solid var(--border-color);
+                        border-radius: 8px;
+                        font-size: 12.5px;
+                        background: #f8fafc;
+                        width: 180px;
+                        transition: var(--transition);
+                        outline: none;
+                        font-family: 'Inter', sans-serif;
+                        color: var(--text-primary);
+                    }
+
+                        .top-header .header-right .search-box input:focus {
+                            border-color: var(--secondary);
+                            background: #fff;
+                            width: 240px;
+                            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.08);
+                        }
+
+                    .top-header .header-right .search-box i {
+                        position: absolute;
+                        left: 11px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        color: var(--text-secondary);
+                        font-size: 13px;
+                    }
+
+                .top-header .header-right .icon-btn {
                     width: 38px;
                     height: 38px;
                     border-radius: 50%;
                     border: none;
                     background: transparent;
-                    color: var(--text-light);
+                    color: var(--text-secondary);
                     cursor: pointer;
+                    transition: var(--transition);
+                    position: relative;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    position: relative;
-                    font-size: 16px;
-                    transition: 0.2s;
                 }
 
-                    .header .right button:hover {
+                    .top-header .header-right .icon-btn:hover {
                         background: #f1f4f9;
-                        color: var(--text);
+                        color: var(--text-primary);
                     }
 
-                    .header .right button .dot {
+                    .top-header .header-right .icon-btn .notif-dot {
                         position: absolute;
                         top: 7px;
                         right: 7px;
@@ -337,184 +433,162 @@
                         border: 2px solid #fff;
                     }
 
-        /* ===== CONTENT ===== */
-        .content {
-            padding: 32px;
-            max-width: 1400px;
-            margin: 0 auto;
+        /* ===== PAGE CONTENT ===== */
+        .page-content {
+            flex: 1;
+            padding: 28px 32px 32px;
         }
 
         /* ===== RESPONSIVE ===== */
         @@media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
-                transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
                 .sidebar.open {
                     transform: translateX(0);
                 }
 
-            .main {
+            .main-content {
                 margin-left: 0;
             }
 
-            .header .toggle {
+            .top-header .toggle-sidebar {
                 display: block;
             }
 
-            .content {
-                padding: 24px 16px;
+            .top-header .header-right .search-box input {
+                width: 120px;
+            }
+
+                .top-header .header-right .search-box input:focus {
+                    width: 160px;
+                }
+
+            .page-content {
+                padding: 20px 16px 24px;
             }
         }
 
         @@media (max-width: 576px) {
-            .header {
-                padding: 0 16px;
+            .top-header {
+                padding: 0 14px;
             }
 
-                .header .title {
+                .top-header .page-title {
                     font-size: 14px;
                 }
 
-                    .header .title small {
+                    .top-header .page-title small {
                         display: none;
                     }
 
-            .content {
-                padding: 16px 12px;
+                .top-header .header-right .search-box input {
+                    width: 80px;
+                }
+
+                    .top-header .header-right .search-box input:focus {
+                        width: 120px;
+                    }
+
+                .top-header .header-right .icon-btn {
+                    width: 34px;
+                    height: 34px;
+                    font-size: 13px;
+                }
+
+            .page-content {
+                padding: 14px 10px 18px;
             }
         }
 
-        .overlay {
+        /* ===== SIDEBAR OVERLAY ===== */
+        .sidebar-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.3);
-            z-index: 999;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 1045;
             display: none;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
         }
 
-            .overlay.show {
+            .sidebar-overlay.show {
                 display: block;
             }
+
+        /* ===== CARDS ===== */
+        .card-elegant {
+            background: #fff;
+            border: none;
+            border-radius: var(--radius);
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+            .card-elegant:hover {
+                box-shadow: var(--card-hover-shadow);
+            }
+
+            .card-elegant .card-header {
+                background: transparent;
+                border-bottom: 1px solid var(--border-color);
+                padding: 14px 20px;
+                font-weight: 600;
+                font-size: 14px;
+                color: var(--text-primary);
+            }
+
+            .card-elegant .card-body {
+                padding: 20px;
+            }
+
+        /* ===== ANIMATIONS ===== */
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.4s ease forwards;
+        }
+
+        .animate-delay-1 {
+            animation-delay: 0.08s;
+        }
+
+        .animate-delay-2 {
+            animation-delay: 0.16s;
+        }
+
+        .animate-delay-3 {
+            animation-delay: 0.24s;
+        }
 
         /* ===== UTILITY ===== */
-        .card {
-            background: var(--card);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            overflow: hidden;
-            transition: 0.2s;
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
-            .card:hover {
-                border-color: var(--primary-light);
-            }
-
-            .card .head {
-                padding: 16px 20px;
-                border-bottom: 1px solid var(--border);
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-                .card .head .title {
-                    font-size: 14px;
-                    font-weight: 600;
-                    color: var(--text);
-                }
-
-                    .card .head .title i {
-                        color: var(--primary);
-                        margin-right: 8px;
-                    }
-
-                .card .head a {
-                    font-size: 13px;
-                    color: var(--primary);
-                    font-weight: 500;
-                    text-decoration: none;
-                }
-
-                    .card .head a:hover {
-                        text-decoration: underline;
-                    }
-
-            .card .body {
-                padding: 4px 20px 16px;
-            }
-
-        .empty {
-            padding: 32px 0;
-            text-align: center;
-            color: var(--text-light);
-        }
-
-            .empty i {
-                font-size: 32px;
-                opacity: 0.15;
-                display: block;
-                margin-bottom: 10px;
-            }
-
-            .empty .main {
-                font-size: 14px;
-                font-weight: 500;
-            }
-
-            .empty .sub {
-                font-size: 13px;
-            }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1.8fr;
-            gap: 24px;
-        }
-
-        .grid-2-eq {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .grid-3 {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .grid-4 {
-            grid-template-columns: repeat(4, 1fr);
-        }
-
-        @@media (max-width: 1024px) {
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-
-            .grid-2-eq {
-                grid-template-columns: 1fr;
-            }
-
-            .grid-3 {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .grid-4 {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @@media (max-width: 600px) {
-            .grid-3 {
-                grid-template-columns: 1fr;
-            }
-
-            .grid-4 {
-                grid-template-columns: 1fr 1fr;
-            }
+        .text-secondary-custom {
+            color: var(--text-secondary);
         }
     </style>
 
@@ -523,152 +597,297 @@
 
 <body>
 
-    <div class="overlay" id="overlay"></div>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar">
+
+        <!-- Brand -->
         <div class="sidebar-brand">
-            <a href="@Url.Action("Index", "Dashboard")">
-                <div class="logo">
+            <a href="@Url.Action("Index", "Dashboard")" class="brand-link">
+                <div class="brand-icon">
                     J7
                     <span class="dot"></span>
                 </div>
-                <div class="brand">
+                <div class="brand-text">
                     <div class="name">STANDARD</div>
                     <div class="sub">Bank</div>
                 </div>
             </a>
         </div>
 
+        <!-- Navigation -->
         <nav class="sidebar-nav">
-            <div class="label">Main</div>
-            <a href="@Url.Action("Index", "Dashboard")" class="@(ViewContext.RouteData.Values["controller"].ToString() == "Dashboard" ? "active" : "")">
-                <i class="fas fa-th-large"></i> Dashboard
-            </a>
-            <a href="@Url.Action("Index", "Banking")" class="@(ViewContext.RouteData.Values["controller"].ToString() == "Banking" ? "active" : "")">
-                <i class="fas fa-exchange-alt"></i> Banking
-            </a>
-            <a href="@Url.Action("PayBill", "BillPayment")" class="@(ViewContext.RouteData.Values["controller"].ToString() == "BillPayment" ? "active" : "")">
-                <i class="fas fa-file-invoice"></i> Pay Bills
-            </a>
-            <a href="@Url.Action("Index", "Beneficiary")" class="@(ViewContext.RouteData.Values["controller"].ToString() == "Beneficiary" ? "active" : "")">
-                <i class="fas fa-users"></i> Beneficiaries
-            </a>
 
-            <div class="label" style="margin-top: 8px;">Planning</div>
-            <a href="@Url.Action("Index", "Savings")" class="@(ViewContext.RouteData.Values["controller"].ToString() == "Savings" ? "active" : "")">
-                <i class="fas fa-piggy-bank"></i> Savings
-            </a>
-            <a href="@Url.Action("Index", "Budget")" class="@(ViewContext.RouteData.Values["controller"].ToString() == "Budget" ? "active" : "")">
-                <i class="fas fa-chart-pie"></i> Budget <span class="badge">AI</span>
-            </a>
+            @if (!User.IsInRole("Admin"))
+            {
+                <!-- ===== CUSTOMER MENU ===== -->
+                <div class="nav-label">Main</div>
 
-            <div class="label" style="margin-top: 8px;">Account</div>
-            <a href="@Url.Action("Index", "Profile")" class="@(ViewContext.RouteData.Values["controller"].ToString() == "Profile" ? "active" : "")">
-                <i class="fas fa-user-cog"></i> Profile
-            </a>
-            <a href="@Url.Action("Index", "Notification")" class="@(ViewContext.RouteData.Values["controller"].ToString() == "Notification" ? "active" : "")">
-                <i class="fas fa-bell"></i> Notifications
-                @if (ViewBag.UnreadCount != null && ViewBag.UnreadCount > 0)
-                {
-                    <span class="badge">@ViewBag.UnreadCount</span>
-                }
-            </a>
+                <div class="nav-item">
+                    <a href="@Url.Action("Index", "Dashboard")" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Dashboard" ? "active" : "")">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="@Url.Action("Index", "Banking")" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Banking" ? "active" : "")">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Banking</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="@Url.Action("PayBill", "BillPayment")" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "BillPayment" ? "active" : "")">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Pay Bills</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="@Url.Action("Index", "Beneficiary")" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Beneficiary" ? "active" : "")">
+                        <i class="fas fa-users"></i>
+                        <span>Beneficiaries</span>
+                    </a>
+                </div>
+
+                <div class="nav-label mt-2">Planning</div>
+
+                <div class="nav-item">
+                    <a href="@Url.Action("Index", "Savings")" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Savings" ? "active" : "")">
+                        <i class="fas fa-piggy-bank"></i>
+                        <span>Savings Goals</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="@Url.Action("Index", "Budget")" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Budget" ? "active" : "")">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Budget</span>
+                        <span class="badge">AI</span>
+                    </a>
+                </div>
+
+                <div class="nav-label mt-2">Account</div>
+
+                <div class="nav-item">
+                    <a href="@Url.Action("Index", "Profile")" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Profile" ? "active" : "")">
+                        <i class="fas fa-user-cog"></i>
+                        <span>Profile</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="@Url.Action("Index", "Notification")" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Notification" ? "active" : "")">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications</span>
+                        @if (ViewBag.UnreadCount != null && ViewBag.UnreadCount > 0)
+                        {
+                            <span class="badge">@ViewBag.UnreadCount</span>
+                        }
+                    </a>
+                </div>
+            }
 
             @if (User.IsInRole("Admin"))
             {
-                <div class="label" style="margin-top: 8px;">Admin</div>
-                <a href="@Url.Action("Index", "Admin")" class="@(ViewContext.RouteData.Values["controller"].ToString() == "Admin" ? "active" : "")">
-                    <i class="fas fa-shield-alt"></i> Admin Panel
-                </a>
+                <!-- ===== ADMIN MENU ===== -->
+                <div class="nav-label">Admin</div>
+
+                <div class="nav-item">
+                    <a href="@Url.Action("Index", "Admin")" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Admin" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : "")">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="@Url.Action("Users", "Admin")" class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "Users" ? "active" : "")">
+                        <i class="fas fa-users-cog"></i>
+                        <span>User Management</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="@Url.Action("Transactions", "Admin")" class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "Transactions" ? "active" : "")">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Transactions</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="@Url.Action("Logs", "Admin")" class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "Logs" ? "active" : "")">
+                        <i class="fas fa-history"></i>
+                        <span>Logs</span>
+                    </a>
+                </div>
+
+                <div class="nav-item">
+                    <a href="@Url.Action("Reports", "Admin")" class="nav-link @(ViewContext.RouteData.Values["action"].ToString() == "Reports" ? "active" : "")">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Reports</span>
+                    </a>
+                </div>
+
+                <div class="nav-label mt-2">Account</div>
+
+                <div class="nav-item">
+                    <a href="@Url.Action("Index", "Profile")" class="nav-link @(ViewContext.RouteData.Values["controller"].ToString() == "Profile" ? "active" : "")">
+                        <i class="fas fa-user-cog"></i>
+                        <span>Profile</span>
+                    </a>
+                </div>
             }
+
         </nav>
 
+        <!-- Sidebar Footer -->
         <div class="sidebar-footer">
-            <div class="user">
-                <div class="avatar">
+            <div class="user-card">
+                <div class="user-avatar">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        var n = User.Identity.Name;
-                        @(n?.Substring(0,1).ToUpper() ?? "U")
+                        var name = User.Identity.Name;
+                        <span>@(name?.Substring(0, 1).ToUpper() ?? "U")</span>
                     }
                     else
-                    { <span>U</span>}
+                    {
+                        <span>U</span>
+                    }
                 </div>
-                <div class="info">
-                    <div class="name">@if (User.Identity.IsAuthenticated)
-                    {@User.Identity.Name }
-                else
-                { <span>Guest</span>}</div>
-                    <div class="email">@if (User.Identity.IsAuthenticated)
-                    {@User.Identity.Name }
-                else
-                { <span>Not logged in</span>}</div>
+                <div class="user-info">
+                    <div class="user-name">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @User.Identity.Name
+                        }
+                        else
+                        {
+                            <span>Guest</span>
+                        }
+                    </div>
+                    <div class="user-email">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @User.Identity.Name
+                        }
+                        else
+                        {
+                            <span>Not logged in</span>
+                        }
+                    </div>
                 </div>
                 @if (User.Identity.IsAuthenticated)
                 {
                     using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { @class = "d-inline" }))
                     {
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="logout"><i class="fas fa-sign-out-alt"></i></button>
+                        <button type="submit" class="logout-btn" title="Logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
                     }
                 }
             </div>
         </div>
     </aside>
 
-    <!-- ===== MAIN ===== -->
-    <div class="main">
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
 
-        <header class="header">
-            <div class="left">
-                <button class="toggle" id="toggleBtn"><i class="fas fa-bars"></i></button>
-                <div class="title">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="toggle-sidebar" id="toggleSidebar" aria-label="Toggle Sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="page-title">
                     @ViewBag.Title
                     <small>@ViewBag.SubTitle</small>
                 </div>
             </div>
-            <div class="right">
-                <button onclick="location.href='@Url.Action("Index", "Notification")'">
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search..." id="globalSearch" />
+                </div>
+                <button class="icon-btn" title="Notifications" onclick="location.href='@Url.Action("Index", "Notification")'">
                     <i class="fas fa-bell"></i>
                     @if (ViewBag.UnreadCount != null && ViewBag.UnreadCount > 0)
-                    {<span class="dot"></span>}
+                    {
+                        <span class="notif-dot"></span>
+                    }
                 </button>
-                <button onclick="location.href='@Url.Action("Index", "Profile")'">
+                <button class="icon-btn" title="Profile" onclick="location.href='@Url.Action("Index", "Profile")'">
                     <i class="fas fa-user"></i>
                 </button>
             </div>
         </header>
 
-        <main class="content">
+        <!-- Page Content -->
+        <main class="page-content">
             @RenderBody()
         </main>
 
     </div>
 
+    <!-- ===== SCRIPTS ===== -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-        const toggleBtn = document.getElementById('toggleBtn');
+        // ===== SIDEBAR TOGGLE =====
+        var sidebar = document.getElementById('sidebar');
+        var overlay = document.getElementById('sidebarOverlay');
+        var toggleBtn = document.getElementById('toggleSidebar');
 
-        toggleBtn?.addEventListener('click', function () {
+        function toggleSidebarFn() {
             sidebar.classList.toggle('open');
             overlay.classList.toggle('show');
-        });
-        overlay?.addEventListener('click', function () {
-            sidebar.classList.remove('open');
-            overlay.classList.remove('show');
-        });
+        }
 
-        window.addEventListener('resize', function () {
+        if (toggleBtn) toggleBtn.addEventListener('click', toggleSidebarFn);
+        if (overlay) overlay.addEventListener('click', toggleSidebarFn);
+
+        window.addEventListener('resize', function() {
             if (window.innerWidth > 992) {
                 sidebar.classList.remove('open');
                 overlay.classList.remove('show');
             }
         });
+
+        // ===== GLOBAL SEARCH =====
+        document.getElementById('globalSearch')?.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                var term = this.value.trim();
+                if (term.length > 0) {
+                    window.location.href = '@Url.Action("Index", "Banking")?searchTerm=' + encodeURIComponent(term);
+                }
+            }
+        });
+
+        // ===== UNREAD NOTIFICATION COUNT =====
+        function updateUnreadCount() {
+            fetch('@Url.Action("GetUnreadCount", "Notification")')
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    var dot = document.querySelector('.notif-dot');
+                    var badge = document.querySelector('.nav-link .badge');
+                    if (data.count > 0) {
+                        if (dot) dot.style.display = 'block';
+                        if (badge) {
+                            badge.textContent = data.count;
+                            badge.style.display = 'inline';
+                        }
+                    } else {
+                        if (dot) dot.style.display = 'none';
+                        if (badge) badge.style.display = 'none';
+                    }
+                })
+                .catch(function() {});
+        }
+        setInterval(updateUnreadCount, 30000);
     </script>
 
     @RenderSection("Scripts", required: false)

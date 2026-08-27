@@ -167,6 +167,7 @@
     <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\SavingsController.cs" />
+    <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -306,6 +307,11 @@
     <Content Include="Views\Savings\Edit.cshtml" />
     <Content Include="Views\Savings\Delete.cshtml" />
     <Content Include="Views\Savings\WithdrawFunds.cshtml" />
+    <Content Include="Views\Shared\_LayoutLanding.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Admin\Transactions.cshtml" />
+    <Content Include="Views\Admin\Logs.cshtml" />
+    <Content Include="Views\Setup\CreateAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

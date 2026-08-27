@@ -1,0 +1,178 @@
+﻿@{
+    ViewBag.Title = "Create Admin";
+    Layout = "~/Views/Shared/_LayoutLanding.cshtml";
+}
+
+<style>
+    body {
+        background: #f0f2f7;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    .setup-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eaedf2;
+        padding: 40px;
+        max-width: 480px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+    }
+
+        .setup-card .icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #e8f0fe;
+            color: #003399;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 16px;
+        }
+
+        .setup-card h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0a1628;
+            margin: 0 0 4px;
+        }
+
+        .setup-card .sub {
+            color: #6b7a8f;
+            font-size: 14px;
+            margin: 0 0 20px;
+        }
+
+        .setup-card .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+            .setup-card .message.success {
+                background: #dcfce7;
+                color: #166534;
+                border: 1px solid #bbf7d0;
+            }
+
+            .setup-card .message.info {
+                background: #e8f0fe;
+                color: #003399;
+                border: 1px solid #c5d5f0;
+            }
+
+            .setup-card .message.error {
+                background: #fef2f2;
+                color: #991b1b;
+                border: 1px solid #fecaca;
+            }
+
+        .setup-card .btn {
+            display: inline-block;
+            padding: 10px 32px;
+            background: #003399;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+            .setup-card .btn:hover {
+                background: #002266;
+            }
+
+        .setup-card .btn-outline {
+            background: transparent;
+            color: #003399;
+            border: 1px solid #003399;
+        }
+
+            .setup-card .btn-outline:hover {
+                background: #003399;
+                color: #fff;
+            }
+
+        .setup-card .creds {
+            margin-top: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-size: 13px;
+            text-align: left;
+            border: 1px solid #eaedf2;
+        }
+
+            .setup-card .creds strong {
+                color: #003399;
+            }
+
+            .setup-card .creds .row {
+                display: flex;
+                justify-content: space-between;
+                padding: 2px 0;
+            }
+</style>
+
+<div class="setup-card">
+    <div class="icon">
+        <i class="fas fa-user-shield"></i>
+    </div>
+    <h1>Admin Setup</h1>
+    <p class="sub">Create or verify the admin account</p>
+
+    @{
+        var msgClass = "info";
+        if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+            if (ViewBag.Message.Contains("success"))
+            {
+                msgClass = "success";
+            }
+            else if (ViewBag.Message.Contains("already"))
+            {
+                msgClass = "info";
+            }
+            else
+            {
+                msgClass = "error";
+            }
+        }
+    }
+
+    <div class="message @msgClass">
+        @ViewBag.Message
+    </div>
+
+    <a href="@Url.Action("CreateAdmin", "Setup")" class="btn">
+        <i class="fas fa-sync me-2"></i>Create Admin
+    </a>
+
+    <div class="creds">
+        <div class="row">
+            <span><strong>Email:</strong></span>
+            <span>admin@standardbank.com</span>
+        </div>
+        <div class="row">
+            <span><strong>Password:</strong></span>
+            <span>Admin@123</span>
+        </div>
+    </div>
+
+    <div style="margin-top: 16px; display: flex; gap: 10px; justify-content: center;">
+        <a href="@Url.Action("Login", "Account")" class="btn btn-outline">
+            <i class="fas fa-sign-in-alt me-2"></i>Go to Login
+        </a>
+    </div>
+</div>

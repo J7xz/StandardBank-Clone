@@ -64,6 +64,8 @@ namespace StandardBank.Controllers
         }
 
         // GET: Admin/Users
+        // GET: Admin/Users
+        // GET: Admin/Users
         public ActionResult Users(string searchTerm, string filterStatus)
         {
             var model = new UserManagementViewModel();
@@ -106,7 +108,7 @@ namespace StandardBank.Controllers
                     IsActive = u.IsActive,
                     IsLocked = u.LockoutEnabled && u.LockoutEndDateUtc > DateTime.UtcNow,
                     TotalAccounts = db.Accounts.Count(a => a.UserId == u.Id),
-                    TotalBalance = db.Accounts.Where(a => a.UserId == u.Id).Sum(a => a.Balance),
+                    TotalBalance = db.Accounts.Where(a => a.UserId == u.Id).Sum(a => (decimal?)a.Balance) ?? 0,
                     LastLoginDate = u.LastLoginDate?.ToString("dd MMM yyyy HH:mm") ?? "Never"
                 })
                 .ToList();
@@ -118,6 +120,8 @@ namespace StandardBank.Controllers
             model.FilterStatus = filterStatus;
 
             return View(model);
+
+
         }
 
         // GET: Admin/UserDetails/{id}
@@ -179,7 +183,7 @@ namespace StandardBank.Controllers
             if (result.Succeeded)
             {
                 // Log the action
-                LogAdminAction("LockUser", id, "User account locked");
+                LogAdminAction("LockUser", id, $"User {user.FullName} was locked by admin");
                 TempData["SuccessMessage"] = $"User {user.FullName} has been locked.";
             }
             else
@@ -219,7 +223,7 @@ namespace StandardBank.Controllers
             if (result.Succeeded)
             {
                 // Log the action
-                LogAdminAction("UnlockUser", id, "User account unlocked");
+                LogAdminAction("UnlockUser", id, $"User {user.FullName} was unlocked by admin");
                 TempData["SuccessMessage"] = $"User {user.FullName} has been unlocked.";
             }
             else
@@ -230,6 +234,7 @@ namespace StandardBank.Controllers
             return RedirectToAction("Users");
         }
 
+        // GET: Admin/Transactions
         // GET: Admin/Transactions
         public ActionResult Transactions(TransactionMonitorFilterViewModel filter)
         {
@@ -254,29 +259,9 @@ namespace StandardBank.Controllers
                     query = query.Where(t => t.TransactionDate < toDate);
                 }
 
-                if (filter.MinAmount.HasValue)
-                {
-                    query = query.Where(t => t.Amount >= filter.MinAmount.Value);
-                }
-
-                if (filter.MaxAmount.HasValue)
-                {
-                    query = query.Where(t => t.Amount <= filter.MaxAmount.Value);
-                }
-
                 if (!string.IsNullOrEmpty(filter.TransactionType))
                 {
                     query = query.Where(t => t.TransactionType == filter.TransactionType);
-                }
-
-                if (!string.IsNullOrEmpty(filter.TransactionCategory))
-                {
-                    query = query.Where(t => t.TransactionCategory == filter.TransactionCategory);
-                }
-
-                if (!string.IsNullOrEmpty(filter.UserId))
-                {
-                    query = query.Where(t => t.Account.UserId == filter.UserId);
                 }
 
                 if (!string.IsNullOrEmpty(filter.Status))
@@ -301,7 +286,6 @@ namespace StandardBank.Controllers
             model.TotalAmount = model.Transactions.Sum(t => t.Amount);
             model.Filter = filter ?? new TransactionMonitorFilterViewModel();
 
-            // Populate dropdown lists
             PopulateFilterDropdowns(model.Filter);
 
             return View(model);
@@ -330,7 +314,7 @@ namespace StandardBank.Controllers
             await db.SaveChangesAsync();
 
             // Log the action
-            LogAdminAction("DeleteTransaction", null, $"Deleted transaction {id} - {description} - Amount: {amount}");
+            LogAdminAction("DeleteTransaction", null, $"Deleted transaction #{id} - {description} - Amount: {amount.ToString("C")}");
 
             TempData["SuccessMessage"] = $"Transaction {id} has been deleted.";
 
@@ -358,12 +342,14 @@ namespace StandardBank.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ClearLogs()
         {
+            var count = db.AdminLogs.Count();
             db.AdminLogs.RemoveRange(db.AdminLogs);
             await db.SaveChangesAsync();
 
-            LogAdminAction("ClearLogs", null, "All admin logs cleared");
+            // Log the action (this will be the last log before everything is cleared)
+            LogAdminAction("ClearLogs", null, $"Cleared {count} admin logs");
 
-            TempData["SuccessMessage"] = "All logs have been cleared.";
+            TempData["SuccessMessage"] = $"All {count} logs have been cleared.";
             return RedirectToAction("Logs");
         }
 
@@ -383,7 +369,7 @@ namespace StandardBank.Controllers
             }
 
             // Log the action
-            LogAdminAction("GenerateReport", null, $"Generated {reportType} report from {fromDate} to {toDate}");
+            LogAdminAction("GenerateReport", null, $"Generated {reportType} report from {fromDate:dd MMM yyyy} to {toDate:dd MMM yyyy}");
 
             ViewBag.ReportType = reportType;
             ViewBag.FromDate = fromDate;
